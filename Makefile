@@ -18,7 +18,7 @@ build: compile concat minify
 
 # uglify built code
 minify:
-	uglifyjs index.js -o index.min.js
+	uglifyjs garmin.js -o garmin.min.js
 
 # combine compiled code for production
 concat:
@@ -40,7 +40,7 @@ spec: clean compile concat
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/{*.html,*.coffee}" "make clean compile concat"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile concat"
 
 # run a benchmark against a known fixture file
 benchmark:
