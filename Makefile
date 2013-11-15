@@ -23,7 +23,7 @@ minify:
 # combine compiled code for production
 concat:
 	browserify $(COMPILE)/src/*.js -o $(COMPILE)/src/index.js
-	browserify $(COMPILE)/spec//*.js -o $(COMPILE)/spec/index.js
+	browserify $(COMPILE)/spec/*.js -o $(COMPILE)/spec/index.js
 
 compile: clean
 	coffee --map --compile --output $(COMPILE)/src src/

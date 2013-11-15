@@ -1,19 +1,17 @@
 exports.XMLParser = class XMLParser
   "use strict"
 
-  constructor: (xml) ->
-    @parser = @_getParser()
+  @parse: (xml) ->
+    @_getParser() unless @_parser
+    @_parser(xml)
 
-  parse: ->
-    @parser xml
-
-  _getParser: ->
-    if window.DOMParser?
+  @_getParser: ->
+    @_parser = if window.DOMParser?
       (xml) -> new window.DOMParser().parseFromString(xml, "text/xml")
     else if window.ActiveXObject? and window.ActiveXObject("Microsoft.XMLDOM")
       (xml) ->
         xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM")
         xmlDoc.async = "false"
-        xmlDoc.loadXML xml
+        xmlDoc.loadXML(xml)
     else
       throw new Error "No XML parser found, can’t parse XML"

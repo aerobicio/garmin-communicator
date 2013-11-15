@@ -1,40 +1,59 @@
-{Device} = require('../src/Device')
+{Device}    = require('../src/Device')
+{XMLParser} = require('../src/utils/XMLParser')
 
 exports.Communicator = class Communicator
   "use strict"
 
   constructor: ->
-    @isBusy = no
-    @plugin = null
+    @init()
 
-    @initCommunicator()
-
-  initCommunicator: ->
+  init: ->
     return @plugin if @plugin
 
-    if @_smellsLikeIE() @_createIEPlugin() else @_createPlugin()
+    if @_smellsLikeIE()
+      @_createIEPlugin()
+    else
+      @_createPlugin()
+      # debugger
+
+  busy: (value) ->
+    @_busy = value if value?
+    @_busy || no
 
   isLocked: ->
     @plugin.Locked
 
   unlock: ->
-    # TODO: explode if the plugin is locked for now...
-    debugger if @isLocked()
+    if @isLocked()
+      # TODO: explode if the plugin is locked for now...
+      # debugger
+      return
 
-  findDevices: ->
-    @unlock() if @isLocked()
-    promise = new Deferred
-    # @plugin.StartFindDevices()
-    # @_loopUntilFinishedFindingDevices(promise)
-    promise
+  devices: ->
+    unless @busy()
+      @busy(yes)
+      @unlock()
+      promise = new Deferred
+      promise.next -> @busy(no)
+      @_findDevices(promise)
+      promise
+
+  _findDevices: (promise) ->
+    @plugin.StartFindDevices()
+    @_loopUntilFinishedFindingDevices(promise)
 
   _loopUntilFinishedFindingDevices: (promise) ->
     if @plugin.FinishFindDevices()
-      data = new XMLParser(@plugin.DevicesXmlString()).parse
-      promise.call(data)
-      console.log data
+      promise.call(@_parseDeviceXml())
     else
-      setTimeout @_loopUntilFinishedFindingDevices(promise), 100
+      setTimeout (=> @_loopUntilFinishedFindingDevices(promise)), 100
+
+  _parseDeviceXml: ->
+    xml = XMLParser.parse(@plugin.DevicesXmlString())
+    _(xml.getElementsByTagName("Device")).map (device) ->
+      name   = device.getAttribute("DisplayName")
+      number = parseInt(device.getAttribute("Number"))
+      new Device(number, name)
 
   _smellsLikeIE: ->
     !window.ActiveXObject?

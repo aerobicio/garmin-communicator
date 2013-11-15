@@ -1,4 +1,3 @@
 exports.Device = class Device
-  constructor: () ->
-    # ...
+  constructor: (@number, @name) ->
 
