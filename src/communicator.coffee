@@ -14,7 +14,6 @@ exports.Communicator = class Communicator
       @_createIEPlugin()
     else
       @_createPlugin()
-      # debugger
 
   busy: (value) ->
     @_busy = value if value?
@@ -50,10 +49,10 @@ exports.Communicator = class Communicator
 
   _parseDeviceXml: ->
     xml = XMLParser.parse(@plugin.DevicesXmlString())
-    _(xml.getElementsByTagName("Device")).map (device) ->
+    _(xml.getElementsByTagName("Device")).map (device) =>
       name   = device.getAttribute("DisplayName")
       number = parseInt(device.getAttribute("Number"))
-      new Device(number, name)
+      new Device(@plugin, number, name)
 
   _smellsLikeIE: ->
     !window.ActiveXObject?

@@ -1,4 +1,5 @@
 {Communicator} = require('../src/Communicator')
+{Device}       = require('../src/Device')
 
 describe 'Communicator', ->
   describe '#init', ->
@@ -160,14 +161,16 @@ describe 'Communicator', ->
 
       describe 'xml', ->
         beforeEach ->
-          @clock = sinon.useFakeTimers()
-          @data = null
+          @deviceInitStub            = sinon.stub(Device.prototype, 'init')
+          @clock                     = sinon.useFakeTimers()
+          @data                      = null
           @FinishFindDevicesResponse = true
           @DevicesXmlStringResponse  = 'text'
 
         afterEach ->
           @clock.restore()
           @initStub.restore()
+          @deviceInitStub.restore()
 
         it 'returns an empty array if there are no devices found', ->
           @clock.tick(100)
