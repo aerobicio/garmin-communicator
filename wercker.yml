@@ -4,4 +4,4 @@ build:
     - npm-install
     - script:
         name: spec
-        code: make spec
+        code: ci-spec

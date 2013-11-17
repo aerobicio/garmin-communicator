@@ -39,8 +39,11 @@ lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: clean compile concat
+spec: clean lint compile concat
 	$(MOCHA_PHANTOMJS) spec/index.html
+
+ci-spec: spec build
+	cp garmin*.js $(WERCKER_REPORT_ARTIFACTS_DIR)
 
 # watch for changes; rebuild, retest
 develop:
@@ -49,4 +52,4 @@ develop:
 # run a benchmark against a known fixture file
 benchmark:
 
-.PHONY: compile spec build clean instrument
+.PHONY: compile spec ci-spec build clean instrument
