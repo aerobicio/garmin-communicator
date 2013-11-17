@@ -45,7 +45,6 @@ exports.Device = class Device
         name == node.getElementsByTagName("Name")[0].textContent
       )[0]
 
-
   _getDeviceDataTypesXml: ->
     @_deviceDataTypes ||= @deviceInfoXml
       ?.getElementsByTagName("MassStorageMode")[0]
