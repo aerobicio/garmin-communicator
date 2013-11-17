@@ -2,4 +2,6 @@ box: wercker/nodejs
 build:
   steps:
     - npm-install
-    - make spec
+    - script:
+      name: spec
+      code: make spec
