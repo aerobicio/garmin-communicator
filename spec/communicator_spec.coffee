@@ -44,16 +44,16 @@ describe 'Communicator', ->
       @initStub.restore()
 
     it 'is not busy by default', ->
-      expect(@communicator.busy()).to.be_false
+      expect(@communicator.busy()).to.equal false
 
     it 'returns the current state of the property, or sets it', ->
       @communicator.busy(yes)
-      expect(@communicator.busy()).to.be_true
+      expect(@communicator.busy()).to.equal true
 
       @communicator.busy(no)
-      expect(@communicator.busy()).to.be_false
+      expect(@communicator.busy()).to.equal false
 
-      expect(@communicator.busy(yes)).to.be_true
+      expect(@communicator.busy(yes)).to.equal true
 
   describe '#isLocked', ->
     beforeEach ->
@@ -67,12 +67,12 @@ describe 'Communicator', ->
     it 'returns true if the plugin is locked', ->
       sinon.stub(@plugin, 'Locked').returns true
       @communicator.plugin = @plugin
-      expect(@communicator.isLocked()).to.be_true
+      expect(@communicator.isLocked()).to.equal true
 
     it 'returns false if the plugin is unlocked', ->
       sinon.stub(@plugin, 'Locked').returns false
       @communicator.plugin = @plugin
-      expect(@communicator.isLocked()).to.be_false
+      expect(@communicator.isLocked()).to.equal false
 
   describe '#unlock', ->
     beforeEach ->
@@ -92,7 +92,7 @@ describe 'Communicator', ->
       it 'returns true when it unlocks the plugin successfully', ->
         sinon.stub(@plugin, 'Locked').returns false
         @communicator.plugin = @plugin
-        expect(@communicator.unlock()).to.be_true
+        expect(@communicator.unlock()).to.equal true
 
       xit 'throws an exception if the plugin fails to unlock'
 
@@ -122,22 +122,22 @@ describe 'Communicator', ->
       @isLockedStub = sinon.stub(@communicator, 'isLocked').returns true
       @unlockStub = sinon.stub(@communicator, 'unlock')
       @communicator.devices()
-      expect(@unlockStub.calledOnce).to.be_true
+      expect(@unlockStub.calledOnce).to.equal true
 
     it 'returns a promise', ->
       subject = @communicator.devices()
-      expect(subject.isDeferred).to.be_true
+      expect(subject.isDeferred).to.equal true
 
     it 'marks the communicator as being busy', ->
       @communicator.devices()
-      expect(@communicator.isBusy).to.be_true
+      expect(@communicator.isBusy).to.equal true
 
     it 'marks the communicator as being inactive once the promise is called', ->
       @FinishFindDevicesStub.returns false
       @communicator.devices()
-      expect(@communicator.isBusy).to.be_true
+      expect(@communicator.isBusy).to.equal true
       @FinishFindDevicesStub.returns true
-      expect(@communicator.isBusy).to.be_false
+      expect(@communicator.isBusy).to.equal false
 
     describe 'when the plugin is already busy', ->
       it 'does nothing', ->
@@ -153,11 +153,11 @@ describe 'Communicator', ->
 
       it 'will keeping checking until the communicator is finished loading every 100ms', ->
         @communicator.devices()
-        expect(@communicator._loopUntilFinishedFindingDevices.calledOnce).to.be_true
+        expect(@communicator._loopUntilFinishedFindingDevices.calledOnce).to.equal true
         @clock.tick(100)
-        expect(@communicator._loopUntilFinishedFindingDevices.calledTwice).to.be_true
+        expect(@communicator._loopUntilFinishedFindingDevices.calledTwice).to.equal true
         @clock.tick(100)
-        expect(@communicator._loopUntilFinishedFindingDevices.calledThrice).to.be_true
+        expect(@communicator._loopUntilFinishedFindingDevices.calledThrice).to.equal true
 
       describe 'xml', ->
         beforeEach ->
