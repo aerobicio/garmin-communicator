@@ -4,4 +4,9 @@ build:
     - npm-install
     - script:
         name: spec
-        code: make ci-spec
+        code: make spec
+    - script:
+        name: build
+        code: |
+          make build
+          cp garmin*.js $(WERCKER_REPORT_ARTIFACTS_DIR)

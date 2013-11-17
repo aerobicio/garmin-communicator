@@ -42,9 +42,6 @@ lint:
 spec: clean lint compile concat
 	$(MOCHA_PHANTOMJS) spec/index.html
 
-ci-spec: spec build
-	cp garmin*.js $(WERCKER_REPORT_ARTIFACTS_DIR)
-
 # watch for changes; rebuild, retest
 develop:
 	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile concat"
