@@ -3,5 +3,5 @@ build:
   steps:
     - npm-install
     - script:
-      name: spec
-      code: make spec
+        name: spec
+        code: make spec
