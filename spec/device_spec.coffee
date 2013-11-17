@@ -1,5 +1,5 @@
-{Communicator} = require('../src/Communicator')
-{Device}       = require('../src/Device')
+{Communicator} = require('../src/communicator')
+{Device}       = require('../src/device')
 
 describe 'Device', ->
   describe '#init', ->

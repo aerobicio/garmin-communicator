@@ -1,4 +1,4 @@
-{Communicator} = require('../src/Communicator')
+{Communicator} = require('../src/communicator')
 
 exports.Garmin = class Garmin
   @statusCodes:

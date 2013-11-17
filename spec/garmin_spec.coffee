@@ -1,3 +1,3 @@
-{Garmin} = require('../src/Garmin')
+{Garmin} = require('../src/garmin')
 
 describe 'Garmin', ->

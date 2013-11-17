@@ -1,5 +1,5 @@
-{Device}    = require('../src/Device')
-{XMLParser} = require('../src/utils/XMLParser')
+{Device}    = require('../src/device')
+{XMLParser} = require('../src/utils/xmlparser')
 
 exports.Communicator = class Communicator
   "use strict"

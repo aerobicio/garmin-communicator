@@ -1,4 +1,4 @@
-{XMLParser} = require('../src/utils/XMLParser')
+{XMLParser} = require('../src/utils/xmlparser')
 
 exports.Device = class Device
   "use strict"
