@@ -4,6 +4,11 @@ SPEC=spec
 BIN=node_modules/.bin
 ISTANBUL=./node_modules/istanbul/lib/cli.js
 MOCHA=./node_modules/mocha/bin/_mocha
+COFFEE=./node_modules/.bin/coffee
+UGLIFYJS=./node_modules/.bin/uglifyjs
+BROWSERIFY=./node_modules/.bin/browserify
+COFFEELINT=./node_modules/.bin/coffeelint
+MOCHA_PHANTOMJS=./node_modules/.bin/mocha-phantomjs
 
 # bootstrap the project for development
 bootstrap:
@@ -18,25 +23,24 @@ build: compile concat minify
 
 # uglify built code
 minify:
-	uglifyjs garmin.js -o garmin.min.js
+	$(UGLIFYJS) garmin.js -o garmin.min.js
 
 # combine compiled code for production
 concat:
-	browserify $(COMPILE)/src/*.js -o $(COMPILE)/src/index.js
-	browserify $(COMPILE)/spec/*.js -o $(COMPILE)/spec/index.js
+	$(BROWSERIFY) $(COMPILE)/src/*.js -o $(COMPILE)/src/index.js
+	$(BROWSERIFY) $(COMPILE)/spec/*.js -o $(COMPILE)/spec/index.js
 
 compile: clean
-	coffee --map --compile --output $(COMPILE)/src src/
-	coffee --map --compile --output $(COMPILE)/spec spec/
+	$(COFFEE) --map --compile --output $(COMPILE)/src src/
+	$(COFFEE) --map --compile --output $(COMPILE)/spec spec/
 
 # run coffeelint over the source code
 lint:
-	coffeelint -r src
+	$(COFFEELINT) -r src
 
 # run the test suite
 spec: clean compile concat
-	# $(ISTANBUL) cover $(MOCHA) -- --growl --ui bdd --reporter spec --require compile/spec/spec_helper.js compile/spec/**/*_spec.js
-	mocha-phantomjs spec/index.html
+	$(MOCHA_PHANTOMJS) spec/index.html
 
 # watch for changes; rebuild, retest
 develop:
