@@ -26,17 +26,16 @@ exports.Device = class Device
     , @
 
   _canXY: (action, dataTypeName) ->
-    ->
-      transferDirection = @_getDataTypeNodeForDataTypeName(dataTypeName)
-        ?.getElementsByTagName("File")[0]
-        ?.getElementsByTagName("TransferDirection")[0].textContent
-      # trasferDirection can be any one of the following:
-      # - InputToUnit:    writing files to the device
-      # - OutputFromUnit: reading files from the device
-      # - InputOutput:    reading and writing files from/to the device
-      # we use a regex to test if the required action is contained in the
-      # device’s TransferDirection node.
-      new RegExp(action).test(transferDirection)
+    transferDirection = @_getDataTypeNodeForDataTypeName(dataTypeName)
+      ?.getElementsByTagName("File")[0]
+      ?.getElementsByTagName("TransferDirection")[0].textContent
+    # trasferDirection can be any one of the following:
+    # - InputToUnit:    writing files to the device
+    # - OutputFromUnit: reading files from the device
+    # - InputOutput:    reading and writing files from/to the device
+    # we use a regex to test if the required action is contained in the
+    # device’s TransferDirection node.
+    new RegExp(action).test(transferDirection)
 
   _getDataTypeNodeForDataTypeName: (name) ->
     dataTypesXml = @_getDeviceDataTypesXml()

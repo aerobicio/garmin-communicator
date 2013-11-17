@@ -26,7 +26,7 @@ exports.Communicator = class Communicator
     if @isLocked()
       # TODO: explode if the plugin is locked for now...
       # debugger
-      return
+      return true
 
   devices: ->
     unless @busy()

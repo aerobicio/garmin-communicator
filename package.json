@@ -4,7 +4,6 @@
   "description": "A sane re-write of the garmin-communicator plugin.",
   "main": "index.js",
   "directories": {
-    "test": "test"
   },
   "devDependencies": {
     "coffee-script": "~1.6.3",
@@ -20,10 +19,7 @@
     "underscore": "~1.5.2",
     "mocha-phantomjs": "~3.1.6",
     "wach": "~0.10.1",
-    "sizzle": "~1.1.0",
-    "jquery": "~1.8.3",
-    "jsdeferred": "~0.4.0",
-    "sinon-chai": "~2.4.0"
+    "jsdeferred": "~0.4.0"
   },
   "scripts": {
     "lint": "make lint",

@@ -44,7 +44,7 @@ describe 'Device', ->
     describe '#canReadActivities', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadActivities()).to.equal false
+        expect(@device.canReadActivities).to.equal false
 
       it 'returns true if the device can read workouts', ->
         @DeviceDescriptionStub.returns """
@@ -61,12 +61,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadActivities()).to.equal true
+        expect(@device.canReadActivities).to.equal true
 
     describe '#canWriteActivities', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteActivities()).to.equal false
+        expect(@device.canWriteActivities).to.equal false
 
       it 'returns true if the device can write workouts', ->
         @DeviceDescriptionStub.returns """
@@ -83,12 +83,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteActivities()).to.equal true
+        expect(@device.canWriteActivities).to.equal true
 
     describe '#canReadWorkouts', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadWorkouts()).to.equal false
+        expect(@device.canReadWorkouts).to.equal false
 
       it 'returns true if the device can read workouts', ->
         @DeviceDescriptionStub.returns """
@@ -105,12 +105,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadWorkouts()).to.equal true
+        expect(@device.canReadWorkouts).to.equal true
 
     describe '#canWriteWorkouts', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteWorkouts()).to.equal false
+        expect(@device.canWriteWorkouts).to.equal false
 
       it 'returns true if the device can write workouts', ->
         @DeviceDescriptionStub.returns """
@@ -127,12 +127,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteWorkouts()).to.equal true
+        expect(@device.canWriteWorkouts).to.equal true
 
     describe '#canReadCourses', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadCourses()).to.equal false
+        expect(@device.canReadCourses).to.equal false
 
       it 'returns true if the device can read courses', ->
         @DeviceDescriptionStub.returns """
@@ -149,12 +149,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadCourses()).to.equal true
+        expect(@device.canReadCourses).to.equal true
 
     describe '#canWriteCourses', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteCourses()).to.equal false
+        expect(@device.canWriteCourses).to.equal false
 
       it 'returns true if the device can write courses', ->
         @DeviceDescriptionStub.returns """
@@ -171,12 +171,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteCourses()).to.equal true
+        expect(@device.canWriteCourses).to.equal true
 
     describe '#canReadGoals', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadGoals()).to.equal false
+        expect(@device.canReadGoals).to.equal false
 
       it 'returns true if the device can read goals', ->
         @DeviceDescriptionStub.returns """
@@ -193,12 +193,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadGoals()).to.equal true
+        expect(@device.canReadGoals).to.equal true
 
     describe '#canWriteGoals', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteGoals()).to.equal false
+        expect(@device.canWriteGoals).to.equal false
 
       it 'returns true if the device can write goals', ->
         @DeviceDescriptionStub.returns """
@@ -215,12 +215,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteGoals()).to.equal true
+        expect(@device.canWriteGoals).to.equal true
 
     describe '#canReadProfile', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadProfile()).to.equal false
+        expect(@device.canReadProfile).to.equal false
 
       it 'returns true if the device can read profiles', ->
         @DeviceDescriptionStub.returns """
@@ -237,12 +237,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadProfile()).to.equal true
+        expect(@device.canReadProfile).to.equal true
 
     describe '#canWriteProfile', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteProfile()).to.equal false
+        expect(@device.canWriteProfile).to.equal false
 
       it 'returns true if the device can write profiles', ->
         @DeviceDescriptionStub.returns """
@@ -259,12 +259,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteProfile()).to.equal true
+        expect(@device.canWriteProfile).to.equal true
 
     describe '#canReadFITActivities', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadFITActivities()).to.equal false
+        expect(@device.canReadFITActivities).to.equal false
 
       it 'returns true if the device can read FIT activities', ->
         @DeviceDescriptionStub.returns """
@@ -281,12 +281,12 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canReadFITActivities()).to.equal true
+        expect(@device.canReadFITActivities).to.equal true
 
     describe '#canWriteFITActivities', ->
       it 'is false by default', ->
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteFITActivities()).to.equal false
+        expect(@device.canWriteFITActivities).to.equal false
 
       it 'returns true if the device can write FIT activities', ->
         @DeviceDescriptionStub.returns """
@@ -303,4 +303,4 @@ describe 'Device', ->
           </Device>
         """
         @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteFITActivities()).to.equal true
+        expect(@device.canWriteFITActivities).to.equal true

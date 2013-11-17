@@ -59,39 +59,37 @@ describe 'Communicator', ->
     beforeEach ->
       @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
-      @plugin = { Locked: -> return }
+      @communicator.plugin = {}
 
     afterEach ->
       @initStub.restore()
 
     it 'returns true if the plugin is locked', ->
-      sinon.stub(@plugin, 'Locked').returns true
-      @communicator.plugin = @plugin
+      @communicator.plugin.Locked = true
       expect(@communicator.isLocked()).to.equal true
 
     it 'returns false if the plugin is unlocked', ->
-      sinon.stub(@plugin, 'Locked').returns false
-      @communicator.plugin = @plugin
+      @communicator.plugin.Locked = false
       expect(@communicator.isLocked()).to.equal false
 
   describe '#unlock', ->
     beforeEach ->
       @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
-      @plugin = { Locked: -> return }
+      @communicator.plugin = {}
 
     afterEach ->
       @initStub.restore()
 
     it 'does nothing if already unlocked', ->
-      sinon.stub(@plugin, 'Locked').returns false
-      @communicator.plugin = @plugin
-      expect(@communicator.unlock()).to.be_null
+      @communicator.plugin.Locked = false
+      expect(@communicator.unlock()).to.equal undefined
 
     describe 'unlocking the plugin', ->
+      beforeEach ->
+        @communicator.plugin.Locked = true
+
       it 'returns true when it unlocks the plugin successfully', ->
-        sinon.stub(@plugin, 'Locked').returns false
-        @communicator.plugin = @plugin
         expect(@communicator.unlock()).to.equal true
 
       xit 'throws an exception if the plugin fails to unlock'
@@ -120,29 +118,30 @@ describe 'Communicator', ->
 
     it 'it will unlock the communicator if it is not already unlocked', ->
       @isLockedStub = sinon.stub(@communicator, 'isLocked').returns true
+      @busyStub = sinon.stub(@communicator, 'busy').returns false
       @unlockStub = sinon.stub(@communicator, 'unlock')
       @communicator.devices()
       expect(@unlockStub.calledOnce).to.equal true
 
     it 'returns a promise', ->
       subject = @communicator.devices()
-      expect(subject.isDeferred).to.equal true
+      expect(subject? and _(subject).isObject and subject.next?).to.equal true
 
     it 'marks the communicator as being busy', ->
       @communicator.devices()
-      expect(@communicator.isBusy).to.equal true
+      expect(@communicator.busy()).to.equal true
 
     it 'marks the communicator as being inactive once the promise is called', ->
-      @FinishFindDevicesStub.returns false
+      @communicator.plugin.FinishFindDevices.returns false
       @communicator.devices()
-      expect(@communicator.isBusy).to.equal true
-      @FinishFindDevicesStub.returns true
-      expect(@communicator.isBusy).to.equal false
+      expect(@communicator.busy()).to.equal true
+      @communicator.plugin.FinishFindDevices.returns true
+      expect(@communicator.busy()).to.equal false
 
     describe 'when the plugin is already busy', ->
       it 'does nothing', ->
         subject = @communicator.devices()
-        expect(subject).to.be_null
+        expect(subject).to.equal undefined
 
     describe 'when the plugin finishes finding devices', ->
       beforeEach ->
