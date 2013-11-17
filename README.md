@@ -5,6 +5,11 @@ Garmin Communicator
 
 [![wercker status](https://app.wercker.com/status/ff202c4e0f75411cda393cbc59e651b9/m "wercker status")](https://app.wercker.com/project/bykey/ff202c4e0f75411cda393cbc59e651b9)
 
+### Requirements
+
+- `underscore`
+- `jsdeferred`
+
 ### Developing
 
 ##### Install developments tools:
