@@ -49,7 +49,7 @@ convert_coverage:
 	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
 
 check_coverage: convert_coverage
-	test `echo "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)" | bc` -eq 1
+	test `node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"` == "true"
 
 # run coffeelint over the source code
 lint:
