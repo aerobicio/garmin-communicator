@@ -9,6 +9,8 @@ UGLIFYJS=./node_modules/.bin/uglifyjs
 BROWSERIFY=./node_modules/.bin/browserify
 COFFEELINT=./node_modules/.bin/coffeelint
 MOCHA_PHANTOMJS=./node_modules/.bin/mocha-phantomjs
+JSCOVERAGE=./node_modules/.bin/jscoverage
+JSON2HTMLCOV=./node_modules/.bin/json2htmlcov
 
 # bootstrap the project for development
 bootstrap:
@@ -35,17 +37,30 @@ compile: clean
 	$(COFFEE) --map --compile --output $(COMPILE)/src src/
 	$(COFFEE) --map --compile --output $(COMPILE)/spec spec/
 
+instrument_coverage:
+	rm -rf coverage && mkdir coverage
+	$(JSCOVERAGE) --no-highlight $(COMPILE)/src $(COMPILE)/src-cov
+	rm -rf $(COMPILE)/src
+	mv $(COMPILE)/src-cov $(COMPILE)/src
+
+convert_coverage:
+	sed -i.temp '/phantomjs/d' coverage/coverage.json
+	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
+
+check_coverage: convert_coverage
+	echo "noop"
+
 # run coffeelint over the source code
 lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: clean lint compile concat
-	$(MOCHA_PHANTOMJS) spec/index.html
+spec: clean compile instrument_coverage concat
+	$(MOCHA_PHANTOMJS) --reporter json-cov spec/index.html > coverage/coverage.json
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile concat"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile instrument_coverage concat"
 
 # run a benchmark against a known fixture file
 benchmark:
