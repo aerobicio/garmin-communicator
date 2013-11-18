@@ -4,8 +4,8 @@
 
 ### Requirements
 
-- `underscore`
-- `jsdeferred`
+- `underscore` (http://underscorejs.org)
+- `q` (https://github.com/kriskowal/q)
 
 ### Developing
 
@@ -13,5 +13,10 @@
 - `npm install`
 - `npm install wach` (platform dependant so this cannot be an npm dependancy)
 
+###### Watch files, recompile on change
+- `make develop`
+- open `./spec/index.html`
+
 ##### Run specs:
+- `make lint`
 - `make spec` or open `./spec/index.html` in a browser.

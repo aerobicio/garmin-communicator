@@ -2,9 +2,8 @@
   "name": "garmin-communicator",
   "version": "0.0.1",
   "description": "A sane re-write of the garmin-communicator plugin.",
-  "main": "index.js",
-  "directories": {
-  },
+  "main": "garmin.js",
+  "directories": {},
   "devDependencies": {
     "coffee-script": "~1.6.3",
     "mocha": "~1.14.0",
@@ -18,7 +17,7 @@
     "uglify-js": "~2.4.3",
     "underscore": "~1.5.2",
     "mocha-phantomjs": "~3.1.6",
-    "jsdeferred": "~0.4.0"
+    "q": "~0.9.7"
   },
   "scripts": {
     "lint": "make lint",

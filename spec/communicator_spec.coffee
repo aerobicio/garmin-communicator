@@ -101,13 +101,13 @@ describe 'Communicator', ->
       # mock out the plugin interface
       plugin = {
         StartFindDevices: -> return
-        FinishFindDevices: -> return
+        FinishFindDevices: -> return 'derp'
         DevicesXmlString: -> return
       }
-      @StartFindDevicesStub      = sinon.stub(plugin, 'StartFindDevices')
-      @FinishFindDevicesStub     = sinon.stub(plugin, 'FinishFindDevices').returns true
-      @DevicesXmlStringStub      = sinon.stub(plugin, 'DevicesXmlString').returns 'text'
-      @communicator.plugin       = plugin
+      @StartFindDevicesStub  = sinon.stub(plugin, 'StartFindDevices')
+      @FinishFindDevicesStub = sinon.stub(plugin, 'FinishFindDevices').returns true
+      @DevicesXmlStringStub  = sinon.stub(plugin, 'DevicesXmlString').returns 'text'
+      @communicator.plugin   = plugin
 
     afterEach ->
       @initStub.restore()
@@ -125,18 +125,26 @@ describe 'Communicator', ->
 
     it 'returns a promise', ->
       subject = @communicator.devices()
-      expect(subject? and _(subject).isObject and subject.next?).to.equal true
+      expect(subject? and _(subject).isObject and subject.isFulfilled()).to.equal true
 
     it 'marks the communicator as being busy', ->
       @communicator.devices()
       expect(@communicator.busy()).to.equal true
 
-    it 'marks the communicator as being inactive once the promise is called', ->
-      @communicator.plugin.FinishFindDevices.returns false
-      @communicator.devices()
-      expect(@communicator.busy()).to.equal true
-      @communicator.plugin.FinishFindDevices.returns true
-      expect(@communicator.busy()).to.equal false
+    describe 'resolving the promise', ->
+      beforeEach ->
+        @clock = sinon.useFakeTimers()
+
+      afterEach ->
+        @clock.restore()
+
+      it 'marks the communicator as being inactive once the promise is called', ->
+        @communicator.plugin.FinishFindDevices = -> false
+        promise = @communicator.devices()
+        expect(@communicator.busy()).to.equal true
+        @communicator.plugin.FinishFindDevices = -> true
+        @clock.tick(100)
+        expect(@communicator.busy()).to.equal false
 
     describe 'when the plugin is already busy', ->
       it 'does nothing', ->

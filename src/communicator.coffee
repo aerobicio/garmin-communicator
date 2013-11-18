@@ -28,24 +28,24 @@ exports.Communicator = class Communicator
       # debugger
       return true
 
-  devices: ->
+  devices: =>
     unless @busy()
       @busy(yes)
       @unlock()
-      promise = new Deferred
-      promise.next -> @busy(no)
-      @_findDevices(promise)
-      promise
+      deferred = Q.defer()
+      deferred.promise.finally => @busy(no)
+      @_findDevices(deferred)
+      deferred.promise
 
-  _findDevices: (promise) ->
+  _findDevices: (deferred) ->
     @plugin.StartFindDevices()
-    @_loopUntilFinishedFindingDevices(promise)
+    @_loopUntilFinishedFindingDevices(deferred)
 
-  _loopUntilFinishedFindingDevices: (promise) ->
+  _loopUntilFinishedFindingDevices: (deferred) ->
     if @plugin.FinishFindDevices()
-      promise.call(@_parseDeviceXml())
+      deferred.resolve(@_parseDeviceXml())
     else
-      setTimeout (=> @_loopUntilFinishedFindingDevices(promise)), 100
+      setTimeout (=> @_loopUntilFinishedFindingDevices(deferred)), 100
 
   _parseDeviceXml: ->
     xml = XMLParser.parse(@plugin.DevicesXmlString())
