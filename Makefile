@@ -23,6 +23,7 @@ build: compile concat minify
 
 # uglify built code
 minify:
+	cp $(COMPILE)/src/index.js garmin.js
 	$(UGLIFYJS) garmin.js -o garmin.min.js
 
 # combine compiled code for production
