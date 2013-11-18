@@ -16,7 +16,7 @@ build:
         name: Build
         code: |
           make build
-  after_steps:
+  after-steps:
     - script:
         name: Save Artifacts
         code: |
