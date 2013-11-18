@@ -1,24 +1,25 @@
 box: wercker/nodejs
 build:
   steps:
-    - npm-install
+    - wercker/npm-install@0.9.3
     - script:
-        name: lint
+        name: Lint
         code: make lint
     - script:
-        name: spec
+        name: Spec
         code: make spec
     - script:
-        name: coverage
+        name: Coverage
         code: |
           make convert_coverage
     - script:
-        name: build
+        name: Build
         code: |
           make build
   after_steps:
     - script:
-        name: save coverage
+        name: Artifacts
         code: |
+          cp garmin*.js $WERCKER_REPORT_ARTIFACTS_DIR/build
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
 
