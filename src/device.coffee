@@ -1,3 +1,4 @@
+{Reader}    = require('../src/device/reader')
 {XMLParser} = require('../src/utils/xmlparser')
 
 exports.Device = class Device
@@ -12,20 +13,34 @@ exports.Device = class Device
     FITActivities:  ['FIT_TYPE_4', 'FITDirectory']
 
   constructor: (@pluginDelegate, @number, @name) ->
-    @init()
-    @createDeviceCapabilityGetters()
+    @deviceDescriptionXml = @_getDeviceDescriptionXml()
+    @_setDeviceInfo()
+    @_setDeviceCapabilities()
+    @_createDeviceAccessors()
 
-  init: ->
-    @_getDeviceInfoXml()
-    @_getDeviceInfo()
-
-  createDeviceCapabilityGetters: ->
+  _setDeviceCapabilities: ->
     _.each @FitnessTypes, (data, type) ->
       @["canRead#{type}"]  = @_canXY('Output', data[0])
       @["canWrite#{type}"] = @_canXY('Input', data[0])
     , @
 
-  _canXY: (action, dataTypeName) ->
+  _createDeviceAccessors: ->
+    _.each @FitnessTypes, (data, type) ->
+      @["read#{type}"]  = @_reader(type, data[0], data[1])
+      # @["write#{type}"] = @_writer()
+    , @
+
+  _reader: (type, dataType, pluginMethod) ->
+    ->
+      unless @["canRead#{type}"]
+        throw new Error("read#{type} is not supported on this device")
+      reader = new Reader(@pluginDelegate, dataType, pluginMethod)
+      reader.perform()
+
+  # _writer: ->
+  #   -> throw new Error "Not implemented"
+
+  _canXY: (method, dataTypeName) ->
     transferDirection = @_getDataTypeNodeForDataTypeName(dataTypeName)
       ?.getElementsByTagName("File")[0]
       ?.getElementsByTagName("TransferDirection")[0].textContent
@@ -33,11 +48,12 @@ exports.Device = class Device
     # - InputToUnit:    writing files to the device
     # - OutputFromUnit: reading files from the device
     # - InputOutput:    reading and writing files from/to the device
-    # we use a regex to test if the required action is contained in the
+    # we use a regex to test if the required method is contained in the
     # device’s TransferDirection node.
-    new RegExp(action).test(transferDirection)
+    transferDirection? and new RegExp(method).test(transferDirection)
 
   _getDataTypeNodeForDataTypeName: (name) ->
+    # debugger
     dataTypesXml = @_getDeviceDataTypesXml()
     if dataTypesXml
       _.filter(dataTypesXml, (node) ->
@@ -45,35 +61,36 @@ exports.Device = class Device
       )[0]
 
   _getDeviceDataTypesXml: ->
-    @_deviceDataTypes ||= @deviceInfoXml
+    @_deviceDataTypes ||= @deviceDescriptionXml
       ?.getElementsByTagName("MassStorageMode")[0]
       ?.getElementsByTagName("DataType")
 
-  _getDeviceInfo: ->
+  _setDeviceInfo: ->
     @id              = @_deviceId()
     @name            = @_deviceDisplayName()
     @partNumber      = @_devicePartNumber()
     @softwareVersion = @_softwareVersion()
 
-  _getDeviceInfoXml: ->
-    @deviceInfoXml = XMLParser.parse(@pluginDelegate.DeviceDescription(@number))
+  _getDeviceDescriptionXml: ->
+    xml = @pluginDelegate.DeviceDescription(@number)
+    XMLParser.parse(xml)
 
   _deviceId: ->
-    @deviceInfoXml.getElementsByTagName("Id")[0].textContent
+    @deviceDescriptionXml.getElementsByTagName("Id")[0].textContent
 
   _deviceDisplayName: ->
-    model = @deviceInfoXml.getElementsByTagName("Model")[0]
+    model = @deviceDescriptionXml.getElementsByTagName("Model")[0]
     if model.getElementsByTagName("DisplayName").length
       model.getElementsByTagName("DisplayName")[0].textContent
     else
       model.getElementsByTagName("Description")[0].textContent
 
   _devicePartNumber: ->
-    @deviceInfoXml
+    @deviceDescriptionXml
       .getElementsByTagName("Model")[0]
       .getElementsByTagName("PartNumber")[0].textContent
 
   _softwareVersion: ->
-    @deviceInfoXml
+    @deviceDescriptionXml
       .getElementsByTagName("Model")[0]
       .getElementsByTagName("SoftwareVersion")[0].textContent

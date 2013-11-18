@@ -30,24 +30,23 @@ describe 'Device', ->
     it 'sets the device software version', ->
       expect(@device.softwareVersion).to.equal "300"
 
-  describe 'capability properties', ->
+  describe 'device capabilities', ->
     beforeEach ->
       @plugin = {DeviceDescription: -> return}
-      @getDeviceInfoStub = sinon.stub(Device.prototype, '_getDeviceInfo')
-      @DeviceDescriptionStub = sinon.stub(@plugin, 'DeviceDescription').returns ""
+      @setDeviceInfoStub     = sinon.stub(Device.prototype, '_setDeviceInfo')
+      @deviceDescriptionStub = sinon.stub(@plugin, 'DeviceDescription')
 
     afterEach ->
-      @getDeviceInfoStub.restore()
-      @DeviceDescriptionStub.restore()
-      @device = null
+      @setDeviceInfoStub.restore()
+      @deviceDescriptionStub.restore()
 
-    describe '#canReadActivities', ->
+    describe '.canReadActivities', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadActivities).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadActivities).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -60,16 +59,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadActivities).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadActivities).to.equal true
 
-    describe '#canWriteActivities', ->
+    describe '.canWriteActivities', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteActivities).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteActivities).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -82,16 +81,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteActivities).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteActivities).to.equal true
 
-    describe '#canReadWorkouts', ->
+    describe '.canReadWorkouts', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadWorkouts).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadWorkouts).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -104,16 +103,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadWorkouts).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadWorkouts).to.equal true
 
-    describe '#canWriteWorkouts', ->
+    describe '.canWriteWorkouts', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteWorkouts).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteWorkouts).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -126,16 +125,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteWorkouts).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteWorkouts).to.equal true
 
-    describe '#canReadCourses', ->
+    describe '.canReadCourses', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadCourses).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadCourses).to.equal false
 
       it 'returns true if the device can read courses', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -148,16 +147,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadCourses).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadCourses).to.equal true
 
-    describe '#canWriteCourses', ->
+    describe '.canWriteCourses', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteCourses).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteCourses).to.equal false
 
       it 'returns true if the device can write courses', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -170,16 +169,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteCourses).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteCourses).to.equal true
 
-    describe '#canReadGoals', ->
+    describe '.canReadGoals', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadGoals).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadGoals).to.equal false
 
       it 'returns true if the device can read goals', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -192,16 +191,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadGoals).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadGoals).to.equal true
 
-    describe '#canWriteGoals', ->
+    describe '.canWriteGoals', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteGoals).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteGoals).to.equal false
 
       it 'returns true if the device can write goals', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -214,16 +213,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteGoals).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteGoals).to.equal true
 
-    describe '#canReadProfile', ->
+    describe '.canReadProfile', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadProfile).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadProfile).to.equal false
 
       it 'returns true if the device can read profiles', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -236,16 +235,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadProfile).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadProfile).to.equal true
 
-    describe '#canWriteProfile', ->
+    describe '.canWriteProfile', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteProfile).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteProfile).to.equal false
 
       it 'returns true if the device can write profiles', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -258,16 +257,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteProfile).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteProfile).to.equal true
 
-    describe '#canReadFITActivities', ->
+    describe '.canReadFITActivities', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadFITActivities).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadFITActivities).to.equal false
 
       it 'returns true if the device can read FIT activities', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -280,16 +279,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canReadFITActivities).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canReadFITActivities).to.equal true
 
-    describe '#canWriteFITActivities', ->
+    describe '.canWriteFITActivities', ->
       it 'is false by default', ->
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteFITActivities).to.equal false
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteFITActivities).to.equal false
 
       it 'returns true if the device can write FIT activities', ->
-        @DeviceDescriptionStub.returns """
+        @deviceDescriptionStub.returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -302,5 +301,79 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        @device = new Device(@plugin, 0, '')
-        expect(@device.canWriteFITActivities).to.equal true
+        device = new Device(@plugin, 0, '')
+        expect(device.canWriteFITActivities).to.equal true
+
+  describe 'reading from the device', ->
+    beforeEach ->
+      @setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
+      @plugin = {
+        DeviceDescription: -> return,
+        busy: -> return
+      }
+      @deviceDescriptionStub = sinon.stub(@plugin, 'DeviceDescription').returns ""
+      @busyStub = sinon.stub(@plugin, 'busy').returns false
+      @device = new Device(@plugin, 0, '')
+
+    afterEach ->
+      @setDeviceInfoStub.restore()
+
+    describe '#readActivities', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadActivities = false
+        expect(=> @device.readActivities()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadActivities = true
+        promise = @device.readActivities()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe '#readWorkouts', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadWorkouts = false
+        expect(=> @device.readWorkouts()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadWorkouts = true
+        promise = @device.readWorkouts()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe '#readCourses', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadCourses = false
+        expect(=> @device.readCourses()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadCourses = true
+        promise = @device.readCourses()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe '#readGoals', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadGoals = false
+        expect(=> @device.readGoals()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadGoals = true
+        promise = @device.readGoals()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe '#readProfile', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadProfile = false
+        expect(=> @device.readProfile()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadProfile = true
+        promise = @device.readProfile()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe '#readFITActivities', (done) ->
+      it 'throws an exception if the device does not support the action', ->
+        @device.canReadFITActivities = false
+        expect(=> @device.readFITActivities()).to.throw Error
+
+      it 'returns a promise of data', ->
+        @device.canReadFITActivities = true
+        promise = @device.readFITActivities()
+        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true

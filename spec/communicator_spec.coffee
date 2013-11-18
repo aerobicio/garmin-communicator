@@ -9,7 +9,7 @@ describe 'Communicator', ->
     it 'will memoise the communicator and return immediately', ->
       subject = new Communicator
       subject.plugin = true
-      expect(subject.init()).to.be.true
+      expect(subject.init()).to.equal true
 
     describe 'in a modern browser', ->
       beforeEach ->
@@ -97,7 +97,7 @@ describe 'Communicator', ->
   describe '#devices', ->
     beforeEach ->
       @clock = sinon.useFakeTimers()
-      @deviceInitStub = sinon.stub(Device.prototype, 'init')
+      @setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
       @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
       # mock out the plugin interface
@@ -105,19 +105,22 @@ describe 'Communicator', ->
         StartFindDevices:  -> return
         FinishFindDevices: -> return
         DevicesXmlString:  -> return
+        DeviceDescription: -> return
       }
-      @StartFindDevicesStub  = sinon.stub(plugin, 'StartFindDevices')
-      @FinishFindDevicesStub = sinon.stub(plugin, 'FinishFindDevices')
-      @DevicesXmlStringStub  = sinon.stub(plugin, 'DevicesXmlString')
+      @startFindDevicesStub  = sinon.stub(plugin, 'StartFindDevices')
+      @finishFindDevicesStub = sinon.stub(plugin, 'FinishFindDevices')
+      @devicesXmlStringStub  = sinon.stub(plugin, 'DevicesXmlString')
+      @deviceDescriptionStub = sinon.stub(plugin, 'DeviceDescription')
       @communicator.plugin   = plugin
 
     afterEach ->
       @clock.restore()
       @initStub.restore()
-      @deviceInitStub.restore()
-      @StartFindDevicesStub.restore()
-      @FinishFindDevicesStub.restore()
-      @DevicesXmlStringStub.restore()
+      @setDeviceInfoStub.restore()
+      @startFindDevicesStub.restore()
+      @finishFindDevicesStub.restore()
+      @devicesXmlStringStub.restore()
+      @deviceDescriptionStub.restore()
       @communicator = null
 
     it 'it will unlock the communicator if it is not already unlocked', ->
@@ -128,16 +131,16 @@ describe 'Communicator', ->
       expect(unlockStub.calledOnce).to.equal true
 
     it 'returns a promise', ->
-      @FinishFindDevicesStub.returns true
+      @finishFindDevicesStub.returns true
       subject = @communicator.devices()
-      expect(subject? and _(subject).isObject and subject.isFulfilled()).to.equal true
+      expect(subject? and _(subject).isObject() and subject.isFulfilled?).to.equal true
 
     it 'marks the communicator as being busy', ->
       @communicator.devices()
       expect(@communicator.busy()).to.equal true
 
     it 'marks the communicator as being inactive once the promise is called', (done) ->
-      @FinishFindDevicesStub.returns false
+      @finishFindDevicesStub.returns false
 
       # When the promise is resolved then it should no longer be busy.
       promise = @communicator.devices().finally =>
@@ -147,7 +150,7 @@ describe 'Communicator', ->
       expect(@communicator.busy()).to.equal true
 
       # Ensure that the promise resolves.
-      @FinishFindDevicesStub.returns true
+      @finishFindDevicesStub.returns true
       @clock.tick(100)
       promise
 
@@ -159,7 +162,7 @@ describe 'Communicator', ->
 
     describe 'when the plugin finishes finding devices', ->
       it 'will keeping checking until the communicator is finished loading every 100ms', (done) ->
-        @FinishFindDevicesStub.returns false
+        @finishFindDevicesStub.returns false
         loopUntilFinishedFindingDevicesSpy = sinon.spy(@communicator, '_loopUntilFinishedFindingDevices')
         promise = @communicator.devices().finally -> done()
 
@@ -170,45 +173,48 @@ describe 'Communicator', ->
         expect(loopUntilFinishedFindingDevicesSpy.calledThrice).to.equal true
 
         # Ensure the promise is kept.
-        @FinishFindDevicesStub.returns true
+        @finishFindDevicesStub.returns true
         @clock.tick(100)
         promise
 
       describe 'xml', ->
         it 'returns an empty array if there are no devices found', (done) ->
-          @clock.tick(100)
-          @DevicesXmlStringStub.returns """
+          @devicesXmlStringStub.returns """
             <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-            <Devices xmlns="http://www.garmin.com/xmlschemas/PluginAPI/v1">
+            <Devices>
             </Devices>
           """
+          @finishFindDevicesStub.returns false
           promise = @communicator.devices().then (data) =>
             expect(data).to.be.empty
             done()
 
-          @FinishFindDevicesStub.returns true
-          @clock.tick(200)
+          @finishFindDevicesStub.returns true
+          @clock.tick(100)
 
           promise
 
         it 'returns an array of devices', (done) ->
-          @DevicesXmlStringStub.returns """
+          @devicesXmlStringStub.returns """
             <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-            <Devices xmlns="http://www.garmin.com/xmlschemas/PluginAPI/v1">
+            <Devices>
               <Device DisplayName="Edge 500" Number="0"/>
               <Device DisplayName="Edge 510" Number="1"/>
+              <Device DisplayName="Garmin Swim" Number="2"/>
             </Devices>
           """
-          @FinishFindDevicesStub.returns false
+          @finishFindDevicesStub.returns false
           promise = @communicator.devices().then (data) =>
-            expect(data.length).to.equal 2
+            expect(data.length).to.equal 3
             expect(data[0].name).to.equal "Edge 500"
             expect(data[0].number).to.equal 0
             expect(data[1].name).to.equal "Edge 510"
             expect(data[1].number).to.equal 1
+            expect(data[2].name).to.equal "Garmin Swim"
+            expect(data[2].number).to.equal 2
             done()
 
-          @FinishFindDevicesStub.returns true
+          @finishFindDevicesStub.returns true
           @clock.tick(100)
 
           promise
