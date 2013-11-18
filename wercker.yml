@@ -22,3 +22,8 @@ build:
         code: |
           cp garmin*.js $WERCKER_REPORT_ARTIFACTS_DIR/build
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
+    - wercker/campfire-notify@0.1.1:
+        token: $CAMPFIRE_TOKEN
+        room-id: 541059
+        subdomain: aerobicio
+        on: failed
