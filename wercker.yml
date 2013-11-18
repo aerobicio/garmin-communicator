@@ -3,10 +3,22 @@ build:
   steps:
     - npm-install
     - script:
+        name: lint
+        code: make lint
+    - script:
         name: spec
         code: make spec
+    - script:
+        name: coverage
+        code: |
+          make convert_coverage
     - script:
         name: build
         code: |
           make build
-          cp garmin*.js $(WERCKER_REPORT_ARTIFACTS_DIR)
+  after_steps:
+    - script:
+        name: save coverage
+        code: |
+          cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
+
