@@ -36,26 +36,30 @@ compile: clean
 	$(COFFEE) --map --compile --output $(COMPILE)/src src/
 	$(COFFEE) --map --compile --output $(COMPILE)/spec spec/
 
-cover:
+instrument_coverage:
 	rm -rf coverage && mkdir coverage
 	$(JSCOVERAGE) --no-highlight $(COMPILE)/src $(COMPILE)/src-cov
 	rm -rf $(COMPILE)/src
 	mv $(COMPILE)/src-cov $(COMPILE)/src
 
 convert_coverage:
-	cat coverage/coverage.json  | $(JSON2HTMLCOV) > coverage/coverage.html
+	sed -i.temp '/phantomjs/d' coverage/coverage.json
+	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
+
+check_coverage: convert_coverage
+	echo "noop"
 
 # run coffeelint over the source code
 lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: clean compile cover concat
-	$(MOCHA_PHANTOMJS) --reporter json-cov spec/index.html | grep -v 'phantomjs' > coverage/coverage.json
+spec: clean compile instrument_coverage concat
+	$(MOCHA_PHANTOMJS) --reporter json-cov spec/index.html > coverage/coverage.json
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile cover concat"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile instrument_coverage concat"
 
 # run a benchmark against a known fixture file
 benchmark:

@@ -11,7 +11,7 @@ build:
     - script:
         name: Coverage
         code: |
-          make convert_coverage
+          make check_coverage
     - script:
         name: Build
         code: |
@@ -22,4 +22,3 @@ build:
         code: |
           cp garmin*.js $WERCKER_REPORT_ARTIFACTS_DIR/build
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
-
