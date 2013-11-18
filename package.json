@@ -17,10 +17,9 @@
     "uglify-js": "~2.4.3",
     "underscore": "~1.5.2",
     "mocha-phantomjs": "~3.1.6",
-    "q": "~0.9.7",
     "json2htmlcov": "~0.1.1",
     "jscoverage": "~0.3.8",
-    "mocha-as-promised": "~1.4.1"
+    "q": "~0.9.7"
   },
   "scripts": {
     "lint": "make lint",
