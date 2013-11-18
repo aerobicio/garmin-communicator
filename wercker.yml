@@ -18,7 +18,7 @@ build:
           make build
   after_steps:
     - script:
-        name: Artifacts
+        name: Save Artifacts
         code: |
           cp garmin*.js $WERCKER_REPORT_ARTIFACTS_DIR/build
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
