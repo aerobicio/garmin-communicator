@@ -1,16 +1,16 @@
-COMPILE=compile
-SRC=src
-SPEC=spec
-BIN=node_modules/.bin
-ISTANBUL=./node_modules/istanbul/lib/cli.js
-MOCHA=./node_modules/mocha/bin/_mocha
-COFFEE=./node_modules/.bin/coffee
-UGLIFYJS=./node_modules/.bin/uglifyjs
-BROWSERIFY=./node_modules/.bin/browserify
-COFFEELINT=./node_modules/.bin/coffeelint
-MOCHA_PHANTOMJS=./node_modules/.bin/mocha-phantomjs
-JSCOVERAGE=./node_modules/.bin/jscoverage
-JSON2HTMLCOV=./node_modules/.bin/json2htmlcov
+COMPILE         = compile
+SRC             = src
+SPEC            = spec
+BIN             = node_modules/.bin
+ISTANBUL        = ./node_modules/istanbul/lib/cli.js
+MOCHA           = ./node_modules/mocha/bin/_mocha
+COFFEE          = ./node_modules/.bin/coffee
+UGLIFYJS        = ./node_modules/.bin/uglifyjs
+BROWSERIFY      = ./node_modules/.bin/browserify
+COFFEELINT      = ./node_modules/.bin/coffeelint
+MOCHA_PHANTOMJS = ./node_modules/.bin/mocha-phantomjs
+JSCOVERAGE      = ./node_modules/.bin/jscoverage
+JSON2HTMLCOV    = ./node_modules/.bin/json2htmlcov
 
 # bootstrap the project for development
 bootstrap:
@@ -45,10 +45,11 @@ instrument_coverage:
 
 convert_coverage:
 	sed -i.temp '/phantomjs/d' coverage/coverage.json
+	cat coverage/coverage.json | grep --max-count=1 -e '"coverage":' | sed "s/[^0-9.]*//g" > coverage/covered_percent
 	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
 
 check_coverage: convert_coverage
-	echo "noop"
+	test `bc <<< "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"` -eq 1
 
 # run coffeelint over the source code
 lint:
