@@ -24,6 +24,7 @@
     <script src="../compile/spec/index.js"></script>
     <script>
       mocha.checkLeaks();
+      mocha.globals(['jQuery']);
       if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
       else { mocha.run(); }
     </script>
