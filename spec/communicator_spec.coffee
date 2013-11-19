@@ -2,14 +2,32 @@
 {Device}       = require('../src/device')
 
 describe 'Communicator', ->
-  describe '#init', ->
-    afterEach ->
-      $("#GarminNetscapePlugin, #GarminActiveXControl, div:empty").remove()
+  afterEach ->
+    $("#GarminNetscapePlugin, #GarminActiveXControl, div:empty").remove()
 
-    it 'will memoise the communicator and return immediately', ->
+  describe 'garmin plugin installation', ->
+    beforeEach ->
+      @checkIsInstalledSpy = sinon.spy(Communicator.prototype, '_checkIsInstalled')
+      @initPluginStub = sinon.stub(Communicator.prototype, '_initPlugin')
+
+    afterEach ->
+      @checkIsInstalledSpy.restore()
+      @initPluginStub.restore()
+
+    it 'checks that the plugin is installed', ->
+      @initPluginStub.returns {Unlock: sinon.spy}
       subject = new Communicator
-      subject.plugin = true
-      expect(subject.init()).to.equal true
+      expect(@checkIsInstalledSpy.calledOnce).to.equal true
+
+    it 'throws an error if the plugin is not installed', ->
+      expect(=> new Communicator).to.throw. Error
+
+  describe 'initialising the plugin', ->
+    beforeEach ->
+      @checkIsInstalledStub = sinon.stub(Communicator.prototype, '_checkIsInstalled')
+
+    afterEach ->
+      @checkIsInstalledStub.restore()
 
     describe 'in a modern browser', ->
       beforeEach ->
@@ -20,8 +38,7 @@ describe 'Communicator', ->
         @stub.restore()
 
       it 'creates a communicator object for a good browser', ->
-        subject = @class.init()
-        expect(subject.id).to.equal "GarminNetscapePlugin"
+        expect(@class.plugin.id).to.equal "GarminNetscapePlugin"
 
     describe 'in internet explorer', ->
       beforeEach ->
@@ -32,8 +49,7 @@ describe 'Communicator', ->
         @stub.restore()
 
       it 'creates a communicator object for a garbage browser', ->
-        subject = @class.init()
-        expect(subject.id).to.equal "GarminActiveXControl"
+        expect(@class.plugin.id).to.equal "GarminActiveXControl"
 
   describe '#busy', ->
     beforeEach ->

@@ -8,12 +8,8 @@ exports.Communicator = class Communicator
     @init()
 
   init: ->
-    return @plugin if @plugin
-
-    if @_smellsLikeIE()
-      @_createIEPlugin()
-    else
-      @_createPlugin()
+    @plugin ||= @_initPlugin()
+    @_checkIsInstalled()
 
   busy: (value) ->
     @_busy = value if value?
@@ -36,6 +32,16 @@ exports.Communicator = class Communicator
       deferred.promise.finally => @busy(no)
       @_findDevices(deferred)
       deferred.promise
+
+  _checkIsInstalled: ->
+    unless @plugin.Unlock?
+      throw new Error("Garmin Communicator plugin not installed")
+
+  _initPlugin: ->
+    if @_smellsLikeIE()
+      @_createIEPlugin()
+    else
+      @_createPlugin()
 
   _findDevices: (deferred) ->
     @plugin.StartFindDevices()
@@ -69,7 +75,7 @@ exports.Communicator = class Communicator
     comm_wrapper.appendChild comm
     document.body.appendChild comm_wrapper
 
-    @plugin = comm
+    comm
 
   _createIEPlugin: ->
     comm = document.createElement 'object'
@@ -82,4 +88,4 @@ exports.Communicator = class Communicator
     comm.setAttribute "classid", "CLSID:099B5A62-DE20-48C6-BF9E-290A9D1D8CB5"
     document.body.appendChild comm
 
-    @plugin = comm
+    comm
