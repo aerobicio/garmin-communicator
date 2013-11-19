@@ -49,7 +49,7 @@ convert_coverage:
 	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
 
 check_coverage: convert_coverage
-	[[ `node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"` == "true" ]]
+	test `node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"` == "true"
 
 # run coffeelint over the source code
 lint:
@@ -66,4 +66,4 @@ develop:
 # run a benchmark against a known fixture file
 benchmark:
 
-.PHONY: compile spec ci-spec build clean instrument
+.PHONY: compile spec ci-spec build clean instrument check_coverage
