@@ -50,7 +50,7 @@ convert_coverage:
 
 check_coverage: convert_coverage
 	$(eval COVERAGE_PASSING := $(shell node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"))
-	test "$(COVERAGE_PASSING)" == "true"
+	test "$(COVERAGE_PASSING)" = "true"
 
 # run coffeelint over the source code
 lint:
