@@ -10,8 +10,10 @@ exports.Accessor = class Accessor
     @deferred = Q.defer()
     throw new Error("Plugin is busy") if @pluginDelegate.busy()
     @pluginDelegate.busy(yes)
+    fn = _pluginCallableForAction()
+    fn(@device.number, @dataType)
 
-  _pluginActionCallable: ->
+  _pluginCallableForAction: ->
     # returns a function of the form: 'StartReadFitnessDirectory'
-    @pluginDelegate["Start#{@::action}#{@pluginMethod}"]
+    @pluginDelegate["Start#{@action}#{@pluginMethod}"]
 
