@@ -30,7 +30,7 @@ describe 'Device', ->
     it 'sets the device software version', ->
       expect(@device.softwareVersion).to.equal "300"
 
-  describe 'device capabilities', ->
+  describe 'Capabilities', ->
     beforeEach ->
       @plugin = {DeviceDescription: -> return}
       @setDeviceInfoStub     = sinon.stub(Device.prototype, '_setDeviceInfo')
@@ -304,7 +304,7 @@ describe 'Device', ->
         device = new Device(@plugin, 0, '')
         expect(device.canWriteFITActivities).to.equal true
 
-  describe 'reading from the device', ->
+  describe 'Data Access', ->
     beforeEach ->
       @setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
       @plugin = {
@@ -318,62 +318,88 @@ describe 'Device', ->
     afterEach ->
       @setDeviceInfoStub.restore()
 
-    describe '#readActivities', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadActivities = false
-        expect(=> @device.readActivities()).to.throw Error
+    describe 'Reading data', ->
+      describe '#readActivities', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadActivities = false
+          expect(=> @device.readActivities()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadActivities = true
-        promise = @device.readActivities()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadActivities = true
+          promise = @device.readActivities()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-    describe '#readWorkouts', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadWorkouts = false
-        expect(=> @device.readWorkouts()).to.throw Error
+      describe '#readWorkouts', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadWorkouts = false
+          expect(=> @device.readWorkouts()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadWorkouts = true
-        promise = @device.readWorkouts()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadWorkouts = true
+          promise = @device.readWorkouts()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-    describe '#readCourses', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadCourses = false
-        expect(=> @device.readCourses()).to.throw Error
+      describe '#readCourses', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadCourses = false
+          expect(=> @device.readCourses()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadCourses = true
-        promise = @device.readCourses()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadCourses = true
+          promise = @device.readCourses()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-    describe '#readGoals', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadGoals = false
-        expect(=> @device.readGoals()).to.throw Error
+      describe '#readGoals', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadGoals = false
+          expect(=> @device.readGoals()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadGoals = true
-        promise = @device.readGoals()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadGoals = true
+          promise = @device.readGoals()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-    describe '#readProfile', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadProfile = false
-        expect(=> @device.readProfile()).to.throw Error
+      describe '#readProfile', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadProfile = false
+          expect(=> @device.readProfile()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadProfile = true
-        promise = @device.readProfile()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadProfile = true
+          promise = @device.readProfile()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-    describe '#readFITActivities', (done) ->
-      it 'throws an exception if the device does not support the action', ->
-        @device.canReadFITActivities = false
-        expect(=> @device.readFITActivities()).to.throw Error
+      describe '#readFITActivities', (done) ->
+        it 'throws an exception if the device does not support the action', ->
+          @device.canReadFITActivities = false
+          expect(=> @device.readFITActivities()).to.throw Error
 
-      it 'returns a promise of data', ->
-        @device.canReadFITActivities = true
-        promise = @device.readFITActivities()
-        expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+        it 'returns a promise of data', ->
+          @device.canReadFITActivities = true
+          promise = @device.readFITActivities()
+          expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
+
+    describe 'Writing data', ->
+      describe '#writeActivities', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeActivities()).to.throw Error
+
+      describe '#writeWorkouts', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeWorkouts()).to.throw Error
+
+      describe '#writeCourses', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeCourses()).to.throw Error
+
+      describe '#writeGoals', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeGoals()).to.throw Error
+
+      describe '#writeProfile', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeProfile()).to.throw Error
+
+      describe '#writeFITActivities', (done) ->
+        it 'is not implemented and throws an exception', ->
+          expect(=> @device.writeFITActivities()).to.throw Error

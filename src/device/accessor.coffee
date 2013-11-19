@@ -1,8 +1,10 @@
 exports.Accessor = class Accessor
   "use strict"
 
-  constructor: (@pluginDelegate, @dataType, @pluginMethod) ->
-    @init?()
+  constructor: (pluginDelegate, dataType, pluginMethod) ->
+    @pluginDelegate = pluginDelegate
+    @dataType       = dataType
+    @pluginMethod   = pluginMethod
 
   perform: ->
     @deferred = Q.defer()
