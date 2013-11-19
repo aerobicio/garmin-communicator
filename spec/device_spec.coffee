@@ -319,7 +319,7 @@ describe 'Device', ->
       @setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
-      describe '#readActivities', (done) ->
+      describe '#readActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadActivities = false
           expect(=> @device.readActivities()).to.throw Error
@@ -329,7 +329,7 @@ describe 'Device', ->
           promise = @device.readActivities()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-      describe '#readWorkouts', (done) ->
+      describe '#readWorkouts', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadWorkouts = false
           expect(=> @device.readWorkouts()).to.throw Error
@@ -339,7 +339,7 @@ describe 'Device', ->
           promise = @device.readWorkouts()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-      describe '#readCourses', (done) ->
+      describe '#readCourses', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadCourses = false
           expect(=> @device.readCourses()).to.throw Error
@@ -349,7 +349,7 @@ describe 'Device', ->
           promise = @device.readCourses()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-      describe '#readGoals', (done) ->
+      describe '#readGoals', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadGoals = false
           expect(=> @device.readGoals()).to.throw Error
@@ -359,7 +359,7 @@ describe 'Device', ->
           promise = @device.readGoals()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-      describe '#readProfile', (done) ->
+      describe '#readProfile', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadProfile = false
           expect(=> @device.readProfile()).to.throw Error
@@ -369,7 +369,7 @@ describe 'Device', ->
           promise = @device.readProfile()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
-      describe '#readFITActivities', (done) ->
+      describe '#readFITActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadFITActivities = false
           expect(=> @device.readFITActivities()).to.throw Error
@@ -380,26 +380,26 @@ describe 'Device', ->
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
     describe 'Writing data', ->
-      describe '#writeActivities', (done) ->
+      describe '#writeActivities', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeActivities()).to.throw Error
 
-      describe '#writeWorkouts', (done) ->
+      describe '#writeWorkouts', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeWorkouts()).to.throw Error
 
-      describe '#writeCourses', (done) ->
+      describe '#writeCourses', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeCourses()).to.throw Error
 
-      describe '#writeGoals', (done) ->
+      describe '#writeGoals', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeGoals()).to.throw Error
 
-      describe '#writeProfile', (done) ->
+      describe '#writeProfile', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeProfile()).to.throw Error
 
-      describe '#writeFITActivities', (done) ->
+      describe '#writeFITActivities', ->
         it 'is not implemented and throws an exception', ->
           expect(=> @device.writeFITActivities()).to.throw Error
