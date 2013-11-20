@@ -21,28 +21,28 @@ describe 'Communicator', ->
   describe '#isLocked', ->
     beforeEach ->
       @communicator = new Communicator
-      @communicator.plugin = {}
+      @communicator.pluginProxy = {}
 
     it 'returns true if the plugin is locked', ->
-      @communicator.plugin.Locked = true
+      @communicator.pluginProxy.Locked = true
       expect(@communicator.isLocked()).to.equal true
 
     it 'returns false if the plugin is unlocked', ->
-      @communicator.plugin.Locked = false
+      @communicator.pluginProxy.Locked = false
       expect(@communicator.isLocked()).to.equal false
 
   describe '#unlock', ->
     beforeEach ->
       @communicator = new Communicator
-      @communicator.plugin = {}
+      @communicator.pluginProxy = {}
 
     it 'does nothing if already unlocked', ->
-      @communicator.plugin.Locked = false
+      @communicator.pluginProxy.Locked = false
       expect(@communicator.unlock()).to.equal undefined
 
     describe 'unlocking the plugin', ->
       beforeEach ->
-        @communicator.plugin.Locked = true
+        @communicator.pluginProxy.Locked = true
 
       it 'returns true when it unlocks the plugin successfully', ->
         expect(@communicator.unlock()).to.equal true
@@ -55,15 +55,15 @@ describe 'Communicator', ->
       @deviceInitStub = sinon.stub(Device.prototype, 'init')
       @communicator = new Communicator
       # mock out the plugin interface
-      plugin = {
+      pluginProxy = {
         StartFindDevices:  -> return
         FinishFindDevices: -> return
         DevicesXmlString:  -> return
       }
-      @StartFindDevicesStub  = sinon.stub(plugin, 'StartFindDevices')
-      @FinishFindDevicesStub = sinon.stub(plugin, 'FinishFindDevices')
-      @DevicesXmlStringStub  = sinon.stub(plugin, 'DevicesXmlString')
-      @communicator.plugin   = plugin
+      @StartFindDevicesStub     = sinon.stub(pluginProxy, 'StartFindDevices')
+      @FinishFindDevicesStub    = sinon.stub(pluginProxy, 'FinishFindDevices')
+      @DevicesXmlStringStub     = sinon.stub(pluginProxy, 'DevicesXmlString')
+      @communicator.pluginProxy = pluginProxy
 
     afterEach ->
       @clock.restore()

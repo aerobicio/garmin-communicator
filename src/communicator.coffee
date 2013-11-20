@@ -6,15 +6,15 @@ exports.Communicator = class Communicator
   "use strict"
 
   constructor: ->
-    @plugin   = new Plugin()
-    @pluginEl = @plugin.el
+    @plugin      = new Plugin()
+    @pluginProxy = @plugin.el
 
   busy: (value) ->
     @_busy = value if value?
     @_busy || no
 
   isLocked: ->
-    @pluginEl.Locked
+    @pluginProxy.Locked
 
   unlock: ->
     if @isLocked()
@@ -32,17 +32,17 @@ exports.Communicator = class Communicator
       deferred.promise
 
   _findDevices: (deferred) ->
-    @plugin.StartFindDevices()
+    @pluginProxy.StartFindDevices()
     @_loopUntilFinishedFindingDevices(deferred)
 
   _loopUntilFinishedFindingDevices: (deferred) ->
-    if @pluginEl.FinishFindDevices()
+    if @pluginProxy.FinishFindDevices()
       deferred.resolve(@_parseDeviceXml())
     else
       setTimeout (=> @_loopUntilFinishedFindingDevices(deferred)), 100
 
   _parseDeviceXml: ->
-    xml = XMLParser.parse(@pluginEl.DevicesXmlString())
+    xml = XMLParser.parse(@pluginProxy.DevicesXmlString())
     _(xml.getElementsByTagName("Device")).map (device) =>
       name   = device.getAttribute("DisplayName")
       number = parseInt(device.getAttribute("Number"))
