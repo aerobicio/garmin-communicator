@@ -2,18 +2,18 @@ exports.Plugin = class Plugin
   "use strict"
 
   constructor: ->
-    @el or= @_init()
+    @el or= @_createPluginEl()
 
-  _init: ->
+  _createPluginEl: ->
     if @_smellsLikeIE()
       @_createIEPlugin()
     else
-      @_createPlugin()
+      @_createVanillaPlugin()
 
   _smellsLikeIE: ->
     !window.ActiveXObject?
 
-  _createPlugin: ->
+  _createVanillaPlugin: ->
     comm_wrapper = document.createElement 'div'
     comm_wrapper.style.width = 0
     comm_wrapper.style.height = 0
