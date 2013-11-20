@@ -2,46 +2,9 @@
 {Device}       = require('../src/device')
 
 describe 'Communicator', ->
-  describe '#init', ->
-    afterEach ->
-      $("#GarminNetscapePlugin, #GarminActiveXControl, div:empty").remove()
-
-    it 'will memoise the communicator and return immediately', ->
-      subject = new Communicator
-      subject.plugin = true
-      expect(subject.init()).to.be.true
-
-    describe 'in a modern browser', ->
-      beforeEach ->
-        @stub = sinon.stub(Communicator.prototype, '_smellsLikeIE').returns false
-        @class = new Communicator
-
-      afterEach ->
-        @stub.restore()
-
-      it 'creates a communicator object for a good browser', ->
-        subject = @class.init()
-        expect(subject.id).to.equal "GarminNetscapePlugin"
-
-    describe 'in internet explorer', ->
-      beforeEach ->
-        @stub = sinon.stub(Communicator.prototype, '_smellsLikeIE').returns true
-        @class = new Communicator
-
-      afterEach ->
-        @stub.restore()
-
-      it 'creates a communicator object for a garbage browser', ->
-        subject = @class.init()
-        expect(subject.id).to.equal "GarminActiveXControl"
-
   describe '#busy', ->
     beforeEach ->
-      @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
-
-    afterEach ->
-      @initStub.restore()
 
     it 'is not busy by default', ->
       expect(@communicator.busy()).to.equal false
@@ -57,12 +20,8 @@ describe 'Communicator', ->
 
   describe '#isLocked', ->
     beforeEach ->
-      @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
       @communicator.plugin = {}
-
-    afterEach ->
-      @initStub.restore()
 
     it 'returns true if the plugin is locked', ->
       @communicator.plugin.Locked = true
@@ -74,12 +33,8 @@ describe 'Communicator', ->
 
   describe '#unlock', ->
     beforeEach ->
-      @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
       @communicator.plugin = {}
-
-    afterEach ->
-      @initStub.restore()
 
     it 'does nothing if already unlocked', ->
       @communicator.plugin.Locked = false
@@ -98,7 +53,6 @@ describe 'Communicator', ->
     beforeEach ->
       @clock = sinon.useFakeTimers()
       @deviceInitStub = sinon.stub(Device.prototype, 'init')
-      @initStub = sinon.stub(Communicator.prototype, 'init')
       @communicator = new Communicator
       # mock out the plugin interface
       plugin = {
@@ -113,7 +67,6 @@ describe 'Communicator', ->
 
     afterEach ->
       @clock.restore()
-      @initStub.restore()
       @deviceInitStub.restore()
       @StartFindDevicesStub.restore()
       @FinishFindDevicesStub.restore()
