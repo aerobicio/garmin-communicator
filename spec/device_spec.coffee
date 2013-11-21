@@ -2,51 +2,47 @@
 {Device}       = require('../src/device')
 
 describe 'Device', ->
-  describe '#init', ->
-    beforeEach ->
-      @plugin = {DeviceDescription: -> return}
-      sinon.stub(@plugin, 'DeviceDescription').returns """
-        <?xml version="1.0" ?>
-        <Device>
-          <Model>
-            <PartNumber>006-B1036-00</PartNumber>
-            <SoftwareVersion>300</SoftwareVersion>
-            <Description>Edge 500</Description>
-          </Model>
-          <Id>3831132051</Id>
-        </Device>
-      """
-      @device = new Device(@plugin, 0, '')
+  beforeEach ->
+    @communicatorStub = sinon.createStubInstance(Communicator)
+    @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+      <?xml version="1.0" ?>
+      <Device>
+        <Model>
+          <PartNumber>006-B1036-00</PartNumber>
+          <SoftwareVersion>300</SoftwareVersion>
+          <Description>Edge 500</Description>
+        </Model>
+        <Id>3831132051</Id>
+      </Device>
+    """
+    @device = new Device(@communicatorStub, 0, '')
 
-    it 'sets the device id', ->
-      expect(@device.id).to.equal "3831132051"
+  it 'sets the device id', ->
+    expect(@device.id).to.equal "3831132051"
 
-    it 'sets the device name', ->
-      expect(@device.name).to.equal "Edge 500"
+  it 'sets the device name', ->
+    expect(@device.name).to.equal "Edge 500"
 
-    it 'sets the device part number', ->
-      expect(@device.partNumber).to.equal "006-B1036-00"
+  it 'sets the device part number', ->
+    expect(@device.partNumber).to.equal "006-B1036-00"
 
-    it 'sets the device software version', ->
-      expect(@device.softwareVersion).to.equal "300"
+  it 'sets the device software version', ->
+    expect(@device.softwareVersion).to.equal "300"
 
   describe 'Capabilities', ->
     beforeEach ->
-      @plugin = {DeviceDescription: -> return}
-      @setDeviceInfoStub     = sinon.stub(Device.prototype, '_setDeviceInfo')
-      @deviceDescriptionStub = sinon.stub(@plugin, 'DeviceDescription')
+      @_setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
 
     afterEach ->
-      @setDeviceInfoStub.restore()
-      @deviceDescriptionStub.restore()
+      @_setDeviceInfoStub.restore()
 
     describe '.canReadActivities', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadActivities).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -59,16 +55,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadActivities).to.equal true
 
     describe '.canWriteActivities', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteActivities).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -81,16 +77,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteActivities).to.equal true
 
     describe '.canReadWorkouts', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadWorkouts).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -103,16 +99,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadWorkouts).to.equal true
 
     describe '.canWriteWorkouts', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteWorkouts).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -125,16 +121,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteWorkouts).to.equal true
 
     describe '.canReadCourses', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadCourses).to.equal false
 
       it 'returns true if the device can read courses', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -147,16 +143,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadCourses).to.equal true
 
     describe '.canWriteCourses', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteCourses).to.equal false
 
       it 'returns true if the device can write courses', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -169,16 +165,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteCourses).to.equal true
 
     describe '.canReadGoals', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadGoals).to.equal false
 
       it 'returns true if the device can read goals', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -191,16 +187,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadGoals).to.equal true
 
     describe '.canWriteGoals', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteGoals).to.equal false
 
       it 'returns true if the device can write goals', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -213,16 +209,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteGoals).to.equal true
 
     describe '.canReadProfile', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadProfile).to.equal false
 
       it 'returns true if the device can read profiles', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -235,16 +231,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadProfile).to.equal true
 
     describe '.canWriteProfile', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteProfile).to.equal false
 
       it 'returns true if the device can write profiles', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -257,16 +253,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteProfile).to.equal true
 
     describe '.canReadFITActivities', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadFITActivities).to.equal false
 
       it 'returns true if the device can read FIT activities', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -279,16 +275,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canReadFITActivities).to.equal true
 
     describe '.canWriteFITActivities', ->
       it 'is false by default', ->
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteFITActivities).to.equal false
 
       it 'returns true if the device can write FIT activities', ->
-        @deviceDescriptionStub.returns """
+        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -301,22 +297,15 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@plugin, 0, '')
+        device = new Device(@communicatorStub, 0, '')
         expect(device.canWriteFITActivities).to.equal true
 
   describe 'Data Access', ->
     beforeEach ->
-      @setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
-      @plugin = {
-        DeviceDescription: -> return,
-        busy: -> return
-      }
-      @deviceDescriptionStub = sinon.stub(@plugin, 'DeviceDescription').returns ""
-      @busyStub = sinon.stub(@plugin, 'busy').returns false
-      @device = new Device(@plugin, 0, '')
+      @_setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
 
     afterEach ->
-      @setDeviceInfoStub.restore()
+      @_setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
       describe '#readActivities', ->

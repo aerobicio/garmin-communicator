@@ -12,7 +12,7 @@ exports.Device = class Device
     Profile:        ['FitnessUserProfile', 'FitnessData']
     FITActivities:  ['FIT_TYPE_4', 'FITDirectory']
 
-  constructor: (@pluginDelegate, @number, @name) ->
+  constructor: (@communicator, @number, @name) ->
     @deviceDescriptionXml = @_getDeviceDescriptionXml()
     @_setDeviceInfo()
     @_setDeviceCapabilities()
@@ -27,18 +27,18 @@ exports.Device = class Device
   _createDeviceAccessors: ->
     _.each @FitnessTypes, (data, type) ->
       @["read#{type}"]  = @_reader(type, data[0], data[1])
-      # @["write#{type}"] = @_writer()
+      @["write#{type}"] = @_writer()
     , @
 
   _reader: (type, dataType, pluginMethod) ->
     ->
       unless @["canRead#{type}"]
         throw new Error("read#{type} is not supported on this device")
-      reader = new Reader(@pluginDelegate, dataType, pluginMethod)
+      reader = new Reader(@communicator, dataType, pluginMethod)
       reader.perform()
 
-  # _writer: ->
-  #   -> throw new Error "Not implemented"
+  _writer: ->
+    -> throw new Error "Not implemented"
 
   _canXY: (method, dataTypeName) ->
     transferDirection = @_getDataTypeNodeForDataTypeName(dataTypeName)
@@ -53,7 +53,6 @@ exports.Device = class Device
     transferDirection? and new RegExp(method).test(transferDirection)
 
   _getDataTypeNodeForDataTypeName: (name) ->
-    # debugger
     dataTypesXml = @_getDeviceDataTypesXml()
     if dataTypesXml
       _.filter(dataTypesXml, (node) ->
@@ -72,7 +71,7 @@ exports.Device = class Device
     @softwareVersion = @_softwareVersion()
 
   _getDeviceDescriptionXml: ->
-    xml = @pluginDelegate.DeviceDescription(@number)
+    xml = @communicator.invoke('DeviceDescription', @number)
     XMLParser.parse(xml)
 
   _deviceId: ->
