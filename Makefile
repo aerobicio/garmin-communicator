@@ -46,7 +46,7 @@ instrument_coverage:
 convert_coverage:
 	sed -i.temp '/phantomjs/d' coverage/coverage.json
 	cat coverage/coverage.json | grep --max-count=1 -e '"coverage":' | sed "s/[^0-9.]*//g" > coverage/covered_percent
-	cat coverage/coverage.json | $(JSON2HTMLCOV) > coverage/coverage.html
+	$(JSON2HTMLCOV) coverage/coverage.json > coverage/coverage.html
 
 check_coverage: convert_coverage
 	$(eval COVERAGE_PASSING := $(shell node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"))

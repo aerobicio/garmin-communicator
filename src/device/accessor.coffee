@@ -1,19 +1,18 @@
 exports.Accessor = class Accessor
   "use strict"
 
-  constructor: (pluginDelegate, dataType, pluginMethod) ->
-    @pluginDelegate = pluginDelegate
-    @dataType       = dataType
-    @pluginMethod   = pluginMethod
+  constructor: (communicator, device, dataType, pluginMethod) ->
+    @communicator = communicator
+    @device       = device
+    @dataType     = dataType
+    @pluginMethod = pluginMethod
 
   perform: ->
     @deferred = Q.defer()
-    throw new Error("Plugin is busy") if @pluginDelegate.busy()
-    @pluginDelegate.busy(yes)
-    # fn = @_pluginCallableForAction()
-    # fn(@device.number, @dataType)
+    throw new Error("Plugin is busy") if @communicator.busy()
+    @communicator.invoke(@_callableNameForAction(), @device.number, @dataType)
 
-  _pluginCallableForAction: ->
+  _callableNameForAction: ->
     # returns a function of the form: 'StartReadFitnessDirectory'
-    @pluginDelegate["Start#{@action}#{@pluginMethod}"]
+    "Start#{@action}#{@pluginMethod}"
 

@@ -17,7 +17,7 @@
     "uglify-js": "~2.4.3",
     "underscore": "~1.5.2",
     "mocha-phantomjs": "~3.1.6",
-    "json2htmlcov": "~0.1.1",
+    "json2htmlcov": "git+https://github.com/plasticine/json2htmlcov.git",
     "jscoverage": "~0.3.8",
     "q": "~0.9.7"
   },
