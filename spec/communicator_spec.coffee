@@ -9,6 +9,14 @@ describe 'Communicator', ->
   afterEach ->
     @_checkIsInstalledStub.restore()
 
+  describe '#invoke', ->
+    beforeEach ->
+      @communicator = new Communicator
+
+    it 'calls the function on the pluginProxy'
+    it 'throws an error if the method name does not exist'
+    it 'throws an error if the method name is not a function of the pluginProxy'
+
   describe '#busy', ->
     beforeEach ->
       @communicator = new Communicator
