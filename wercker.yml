@@ -11,7 +11,7 @@ build:
     - script:
         name: Coverage
         code: |
-          make check_coverage
+          make coverage
     - script:
         name: Build
         code: |

@@ -48,8 +48,12 @@ convert_coverage:
 	cat coverage/coverage.json | grep --max-count=1 -e '"coverage":' | sed "s/[^0-9.]*//g" > coverage/covered_percent
 	$(JSON2HTMLCOV) coverage/coverage.json > coverage/coverage.html
 
-check_coverage: convert_coverage
-	$(eval COVERAGE_PASSING := $(shell node -pe "$(shell cat coverage/covered_percent) >= $(shell cat .coverage)"))
+coverage: convert_coverage
+	$(eval COVERED_PERCENT    := $(shell cat coverage/covered_percent))
+	$(eval COVERAGE_THRESHOLD := $(shell cat .coverage))
+	$(eval COVERAGE_PASSING   := $(shell node -pe "$(COVERED_PERCENT) >= $(COVERAGE_THRESHOLD)"))
+
+	echo "$(COVERED_PERCENT) >= $(COVERAGE_THRESHOLD)"
 	test "$(COVERAGE_PASSING)" = "true"
 
 # run coffeelint over the source code
@@ -64,7 +68,4 @@ spec: clean compile instrument_coverage concat
 develop:
 	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile instrument_coverage concat"
 
-# run a benchmark against a known fixture file
-benchmark:
-
-.PHONY: compile spec ci-spec build clean instrument check_coverage
+.PHONY: compile spec ci-spec build clean instrument coverage
