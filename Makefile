@@ -25,8 +25,9 @@ dist: compile concat minify
 
 # uglify built code
 minify:
+	mkdir -p dist
 	cp $(COMPILE)/src/index.js dist/garmin.js
-	$(UGLIFYJS) dist/garmin.js -o dist/garmin.min.js
+	$(UGLIFYJS) dist/garmin.js --stats -o dist/garmin.min.js
 
 # combine compiled code for production
 concat:
