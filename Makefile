@@ -21,12 +21,12 @@ clean:
 	rm -f $(COMPILE)/{spec,src}/*.js $(COMPILE)/{spec,src}/*.map
 
 # build dist targets
-build: compile concat minify
+dist: compile concat minify
 
 # uglify built code
 minify:
-	cp $(COMPILE)/src/index.js garmin.js
-	$(UGLIFYJS) garmin.js -o garmin.min.js
+	cp $(COMPILE)/src/index.js dist/garmin.js
+	$(UGLIFYJS) dist/garmin.js -o dist/garmin.min.js
 
 # combine compiled code for production
 concat:
@@ -67,4 +67,4 @@ develop:
 # run a benchmark against a known fixture file
 benchmark:
 
-.PHONY: compile spec ci-spec build clean instrument check_coverage
+.PHONY: compile spec ci-spec dist clean instrument check_coverage
