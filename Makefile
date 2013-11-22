@@ -21,12 +21,13 @@ clean:
 	rm -f $(COMPILE)/{spec,src}/*.js $(COMPILE)/{spec,src}/*.map
 
 # build dist targets
-build: compile concat minify
+dist: compile concat minify
 
 # uglify built code
 minify:
-	cp $(COMPILE)/src/index.js garmin.js
-	$(UGLIFYJS) garmin.js -o garmin.min.js
+	mkdir -p dist
+	cp $(COMPILE)/src/index.js dist/garmin.js
+	$(UGLIFYJS) dist/garmin.js --stats -o dist/garmin.min.js
 
 # combine compiled code for production
 concat:
@@ -68,4 +69,4 @@ spec: clean compile instrument_coverage concat
 develop:
 	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile instrument_coverage concat"
 
-.PHONY: compile spec ci-spec build clean instrument coverage
+.PHONY: compile spec ci-spec dist clean instrument COVERAGE_THRESHOLD

@@ -13,14 +13,14 @@ build:
         code: |
           make coverage
     - script:
-        name: Build
+        name: Build distribution
         code: |
-          make build
+          make dist
   after-steps:
     - script:
         name: Save Artifacts
         code: |
-          cp garmin*.js $WERCKER_REPORT_ARTIFACTS_DIR
+          cp -R dist $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
     - wercker/campfire-notify@0.1.1:
         token: $CAMPFIRE_TOKEN
