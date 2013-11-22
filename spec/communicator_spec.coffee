@@ -13,9 +13,17 @@ describe 'Communicator', ->
     beforeEach ->
       @communicator = new Communicator
 
-    it 'calls the function on the pluginProxy'
-    it 'throws an error if the method name does not exist'
-    it 'throws an error if the method name is not a function of the pluginProxy'
+    it 'calls the function on the pluginProxy', ->
+      @communicator.pluginProxy.derp = sinon.stub()
+      @communicator.invoke('derp')
+      expect(@communicator.pluginProxy.derp.calledOnce).to.equal true
+
+    it 'throws an error if the method name does not exist', ->
+      expect(=> @communicator.invoke('derp')).to.throw Error
+
+    it 'throws an error if the method name is not a function of the pluginProxy', ->
+      @communicator.pluginProxy.derp = 'I am not a function'
+      expect(=> @communicator.invoke('derp')).to.throw Error
 
   describe '#busy', ->
     beforeEach ->
