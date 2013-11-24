@@ -16,20 +16,5 @@
   "dependencies": {
     "q": "~0.9.7",
     "underscore": "~1.5.2"
-  },
-  "devDependencies": {
-    "browserify": "~2.35.1",
-    "chai": "~1.8.1",
-    "coffee-script": "~1.6.3",
-    "coffeeify": "~0.5.2",
-    "coffeelint": "~0.6.1",
-    "istanbul": "~0.1.44",
-    "jscoverage": "~0.3.8",
-    "json2htmlcov": "git+https://github.com/plasticine/json2htmlcov.git",
-    "mocha": "~1.14.0",
-    "mocha-istanbul": "~0.2.0",
-    "mocha-phantomjs": "~3.1.6",
-    "sinon": "~1.7.3",
-    "uglify-js": "~2.4.3"
-  },
+  }
 }
