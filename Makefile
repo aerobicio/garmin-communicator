@@ -21,7 +21,7 @@ clean:
 	rm -f $(COMPILE)/{spec,src}/*.js $(COMPILE)/{spec,src}/*.map
 
 # build dist targets
-dist: compile concat minify
+dist: concat minify
 
 # uglify built code
 minify:
@@ -31,12 +31,9 @@ minify:
 
 # combine compiled code for production
 concat:
-	$(BROWSERIFY) $(COMPILE)/src/*.js -o $(COMPILE)/src/index.js
-	$(BROWSERIFY) $(COMPILE)/spec/*.js -o $(COMPILE)/spec/index.js
-
-compile: clean
-	$(COFFEE) --map --compile --output $(COMPILE)/src src/
-	$(COFFEE) --map --compile --output $(COMPILE)/spec spec/
+	mkdir -p $(COMPILE)/{src,spec}
+	$(BROWSERIFY) -t coffeeify --extension=".coffee" $(SRC)/*.coffee > $(COMPILE)/src/index.js
+	$(BROWSERIFY) -t coffeeify --extension=".coffee" $(SPEC)/*.coffee > $(COMPILE)/spec/index.js
 
 instrument_coverage:
 	rm -rf coverage && mkdir coverage
@@ -62,11 +59,11 @@ lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: clean compile instrument_coverage concat
+spec: clean concat instrument_coverage
 	$(MOCHA_PHANTOMJS) --reporter json-cov spec/index.html > coverage/coverage.json
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile instrument_coverage concat"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean concat instrument_coverage"
 
-.PHONY: compile spec ci-spec dist clean instrument COVERAGE_THRESHOLD
+.PHONY: spec ci-spec dist clean instrument COVERAGE_THRESHOLD
