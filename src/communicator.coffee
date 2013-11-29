@@ -13,9 +13,18 @@ exports.Communicator = class Communicator
     fn = @pluginProxy[name]
 
     if fn? and typeof fn is 'function'
-      fn(args)
+      fn.apply(@pluginProxy, args)
     else
       throw new Error("'#{name}' function does not exist!")
+
+  write: (name, data) ->
+    if @pluginProxy.hasOwnProperty(name)
+      @pluginProxy[name] = data
+
+  read: (name) ->
+    # TODO: spec me
+    if @pluginProxy.hasOwnProperty(name)
+      @pluginProxy[name]
 
   busy: (value) ->
     @_busy = value if value?
@@ -24,7 +33,7 @@ exports.Communicator = class Communicator
   isLocked: ->
     @pluginProxy.Locked
 
-  unlock: ->
+  unlock: (unlock_codes) ->
     if @isLocked()
       # TODO: explode if the plugin is locked for now...
       # debugger

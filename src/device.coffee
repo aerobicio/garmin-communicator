@@ -4,13 +4,13 @@
 exports.Device = class Device
   "use strict"
 
-  FitnessTypes:
-    Activities:     ['FitnessHistory', 'FitnessDirectory']
-    Workouts:       ['FitnessWorkouts', 'FitnessData']
-    Courses:        ['FitnessCourses', 'FitnessData']
-    Goals:          ['FitnessActivityGoals', 'FitnessData']
-    Profile:        ['FitnessUserProfile', 'FitnessData']
-    FITActivities:  ['FIT_TYPE_4', 'FITDirectory']
+  ACTIONS:
+    Activities:     ['FitnessHistory',        'FitnessDirectory']
+    Workouts:       ['FitnessWorkouts',       'FitnessData']
+    Courses:        ['FitnessCourses',        'FitnessData']
+    Goals:          ['FitnessActivityGoals',  'FitnessData']
+    Profile:        ['FitnessUserProfile',    'FitnessData']
+    FITActivities:  ['FIT_TYPE_4',            'FITDirectory']
 
   constructor: (@communicator, @number, @name) ->
     @deviceDescriptionXml = @_getDeviceDescriptionXml()
@@ -18,14 +18,23 @@ exports.Device = class Device
     @_setDeviceCapabilities()
     @_createDeviceAccessors()
 
+  readFitFile: (path) ->
+    if @canReadFITActivities
+      deferred = Q.defer()
+      fitFile = @communicator.invoke('GetBinaryFile', @number, path, false)
+      deferred.resolve(fitFile)
+      deferred.promise()
+    else
+      # throw new Error("FIT files are not supported on this device")
+
   _setDeviceCapabilities: ->
-    _.each @FitnessTypes, (data, type) ->
+    _.each @ACTIONS, (data, type) ->
       @["canRead#{type}"]  = @_canXY('Output', data[0])
       @["canWrite#{type}"] = @_canXY('Input', data[0])
     , @
 
   _createDeviceAccessors: ->
-    _.each @FitnessTypes, (data, type) ->
+    _.each @ACTIONS, (data, type) ->
       @["read#{type}"]  = @_reader(type, data[0], data[1])
       @["write#{type}"] = @_writer()
     , @
@@ -34,7 +43,7 @@ exports.Device = class Device
     ->
       unless @["canRead#{type}"]
         throw new Error("read#{type} is not supported on this device")
-      reader = new Reader(@communicator, dataType, pluginMethod)
+      reader = new Reader(@communicator, @, dataType, pluginMethod)
       reader.perform()
 
   _writer: ->

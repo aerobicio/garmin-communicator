@@ -6,6 +6,9 @@ exports.Plugin = class Plugin
 
     @_checkIsInstalled()
 
+  softwareVersion: ->
+    throw new Error("Not Implemented")
+
   _createPluginEl: ->
     if @_smellsLikeIE()
       @_createIEPlugin()
@@ -17,7 +20,7 @@ exports.Plugin = class Plugin
       throw new Error("Garmin Communicator plugin not installed")
 
   _smellsLikeIE: ->
-    !window.ActiveXObject?
+    window.ActiveXObject?
 
   _createVanillaPlugin: ->
     comm_wrapper = document.createElement 'div'

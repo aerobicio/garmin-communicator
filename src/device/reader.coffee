@@ -6,5 +6,11 @@ exports.Reader = class Reader extends Accessor
   action: 'Read'
 
   perform: ->
+    @_clearDeviceXmlBuffers()
     super
     @deferred.promise
+
+  _clearDeviceXmlBuffers: ->
+    @communicator.write("TcdXml", "")
+    @communicator.write("DirectoryListingXml", "")
+
