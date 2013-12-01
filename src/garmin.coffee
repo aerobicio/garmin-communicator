@@ -10,8 +10,7 @@ window.Garmin = class Garmin
     @options = _(options).defaults
       unlock_codes: @DEFAULT_UNLOCK_CODES
 
-    @communicator = new Communicator
-    # @communicator.unlock(@options.unlock_codes)
+    # Communicator.get().unlock(@options.unlock_codes)
 
   devices: ->
-    @communicator.devices()
+    Communicator.get().devices()

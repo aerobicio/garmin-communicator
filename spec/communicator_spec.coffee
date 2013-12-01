@@ -11,7 +11,7 @@ describe 'Communicator', ->
 
   describe '#invoke', ->
     beforeEach ->
-      @communicator = new Communicator
+      @communicator = Communicator.get()
 
     it 'calls the function on the pluginProxy', ->
       @communicator.pluginProxy.derp = sinon.stub()
@@ -19,7 +19,7 @@ describe 'Communicator', ->
       expect(@communicator.pluginProxy.derp.calledOnce).to.equal true
 
     it 'throws an error if the method name does not exist', ->
-      expect(=> @communicator.invoke('derp')).to.throw Error
+      expect(=> @communicator.invoke('foobar')).to.throw Error
 
     it 'throws an error if the method name is not a function of the pluginProxy', ->
       @communicator.pluginProxy.derp = 'I am not a function'
@@ -27,7 +27,7 @@ describe 'Communicator', ->
 
   describe '#busy', ->
     beforeEach ->
-      @communicator = new Communicator
+      @communicator = Communicator.get()
 
     it 'is not busy by default', ->
       expect(@communicator.busy()).to.equal false
@@ -43,7 +43,7 @@ describe 'Communicator', ->
 
   describe '#isLocked', ->
     beforeEach ->
-      @communicator = new Communicator
+      @communicator = Communicator.get()
       @communicator.pluginProxy = {}
 
     it 'returns true if the plugin is locked', ->
@@ -56,7 +56,7 @@ describe 'Communicator', ->
 
   describe '#unlock', ->
     beforeEach ->
-      @communicator = new Communicator
+      @communicator = Communicator.get()
       @communicator.pluginProxy = {}
 
     it 'does nothing if already unlocked', ->
@@ -75,7 +75,7 @@ describe 'Communicator', ->
   describe '#devices', ->
     beforeEach ->
       @clock = sinon.useFakeTimers()
-      @communicator = new Communicator
+      @communicator = Communicator.get()
       # mock out the plugin interface
       pluginProxy = {
         StartFindDevices:  -> return
@@ -89,6 +89,7 @@ describe 'Communicator', ->
       @communicator.pluginProxy = pluginProxy
 
     afterEach ->
+      @communicator = Communicator.destroy()
       @clock.restore()
       @startFindDevicesStub.restore()
       @finishFindDevicesStub.restore()

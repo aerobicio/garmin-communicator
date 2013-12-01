@@ -7,7 +7,7 @@ exports.Plugin = class Plugin
     @_checkIsInstalled()
 
   softwareVersion: ->
-    throw new Error("Not Implemented")
+    @el.getPluginVersion()
 
   _createPluginEl: ->
     if @_smellsLikeIE()

@@ -1,8 +1,14 @@
-{Reader}    = require('../src/device/reader')
-{XMLParser} = require('../src/utils/xmlparser')
+{Communicator} = require('../src/communicator')
+{Reader}       = require('../src/device/reader')
+{XMLParser}    = require('../src/utils/xmlparser')
 
 exports.Device = class Device
   "use strict"
+
+  # TRANSFER_MODES:
+  #   read:  "OutputFromUnit"
+  #   write: "InputToUnit"
+  #   both:  "InputOutput"
 
   ACTIONS:
     Activities:     ['FitnessHistory',        'FitnessDirectory']
@@ -12,20 +18,15 @@ exports.Device = class Device
     Profile:        ['FitnessUserProfile',    'FitnessData']
     FITActivities:  ['FIT_TYPE_4',            'FITDirectory']
 
-  constructor: (@communicator, @number, @name) ->
+  constructor: (@number, @name) ->
+    @communicator = Communicator.get()
     @deviceDescriptionXml = @_getDeviceDescriptionXml()
     @_setDeviceInfo()
     @_setDeviceCapabilities()
     @_createDeviceAccessors()
 
-  readFitFile: (path) ->
-    if @canReadFITActivities
-      deferred = Q.defer()
-      fitFile = @communicator.invoke('GetBinaryFile', @number, path, false)
-      deferred.resolve(fitFile)
-      deferred.promise()
-    else
-      # throw new Error("FIT files are not supported on this device")
+  activities: ->
+    if @canReadFITActivities then @readFITActivities() else @readActivities()
 
   _setDeviceCapabilities: ->
     _.each @ACTIONS, (data, type) ->
@@ -43,7 +44,7 @@ exports.Device = class Device
     ->
       unless @["canRead#{type}"]
         throw new Error("read#{type} is not supported on this device")
-      reader = new Reader(@communicator, @, dataType, pluginMethod)
+      reader = new Reader(@, dataType, pluginMethod)
       reader.perform()
 
   _writer: ->

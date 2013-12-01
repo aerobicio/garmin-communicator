@@ -41,8 +41,8 @@ describe 'Plugin', ->
 
     it 'checks that the plugin is installed', ->
       sinon.stub(Plugin.prototype, '_createPluginEl').returns { Unlock: -> true }
-      new Communicator
+      Communicator.get()
       expect(@_checkIsInstalled.calledOnce).to.equal true
 
     it 'throws an error if the plugin is not installed', ->
-      expect(=> new Communicator).to.throw. Error
+      expect(=> Communicator.get()).to.throw. Error

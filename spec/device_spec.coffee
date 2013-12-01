@@ -3,8 +3,9 @@
 
 describe 'Device', ->
   beforeEach ->
-    @communicatorStub = sinon.createStubInstance(Communicator)
-    @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+    @communicator = Communicator.get()
+    sinon.stub(@communicator, 'invoke')
+    @communicator.invoke.withArgs('DeviceDescription', 0).returns """
       <?xml version="1.0" ?>
       <Device>
         <Model>
@@ -15,7 +16,10 @@ describe 'Device', ->
         <Id>3831132051</Id>
       </Device>
     """
-    @device = new Device(@communicatorStub, 0, '')
+    @device = new Device(0, '')
+
+  afterEach ->
+    @communicator = Communicator.destroy()
 
   it 'sets the device id', ->
     expect(@device.id).to.equal "3831132051"
@@ -38,11 +42,11 @@ describe 'Device', ->
 
     describe '.canReadActivities', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadActivities).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -55,16 +59,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadActivities).to.equal true
 
     describe '.canWriteActivities', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteActivities).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -77,16 +81,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteActivities).to.equal true
 
     describe '.canReadWorkouts', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadWorkouts).to.equal false
 
       it 'returns true if the device can read workouts', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -99,16 +103,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadWorkouts).to.equal true
 
     describe '.canWriteWorkouts', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteWorkouts).to.equal false
 
       it 'returns true if the device can write workouts', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -121,16 +125,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteWorkouts).to.equal true
 
     describe '.canReadCourses', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadCourses).to.equal false
 
       it 'returns true if the device can read courses', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -143,16 +147,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadCourses).to.equal true
 
     describe '.canWriteCourses', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteCourses).to.equal false
 
       it 'returns true if the device can write courses', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -165,16 +169,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteCourses).to.equal true
 
     describe '.canReadGoals', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadGoals).to.equal false
 
       it 'returns true if the device can read goals', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -187,16 +191,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadGoals).to.equal true
 
     describe '.canWriteGoals', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteGoals).to.equal false
 
       it 'returns true if the device can write goals', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -209,16 +213,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteGoals).to.equal true
 
     describe '.canReadProfile', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadProfile).to.equal false
 
       it 'returns true if the device can read profiles', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -231,16 +235,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadProfile).to.equal true
 
     describe '.canWriteProfile', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteProfile).to.equal false
 
       it 'returns true if the device can write profiles', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -253,16 +257,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteProfile).to.equal true
 
     describe '.canReadFITActivities', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadFITActivities).to.equal false
 
       it 'returns true if the device can read FIT activities', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -275,16 +279,16 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canReadFITActivities).to.equal true
 
     describe '.canWriteFITActivities', ->
       it 'is false by default', ->
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteFITActivities).to.equal false
 
       it 'returns true if the device can write FIT activities', ->
-        @communicatorStub.invoke.withArgs('DeviceDescription', 0).returns """
+        @communicator.invoke.withArgs('DeviceDescription', 0).returns """
           <?xml version="1.0" ?>
           <Device>
             <MassStorageMode>
@@ -297,7 +301,7 @@ describe 'Device', ->
             </MassStorageMode>
           </Device>
         """
-        device = new Device(@communicatorStub, 0, '')
+        device = new Device(0, '')
         expect(device.canWriteFITActivities).to.equal true
 
   describe 'Data Access', ->
@@ -308,12 +312,21 @@ describe 'Device', ->
       @_setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
+      beforeEach ->
+        @communicator.invoke.restore()
+        sinon.stub(@communicator, 'invoke')
+
+      afterEach ->
+        @communicator.invoke.restore()
+        Communicator.destroy()
+
       describe '#readActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadActivities = false
           expect(=> @device.readActivities()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadActivities').returns 3
           @device.canReadActivities = true
           promise = @device.readActivities()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -324,6 +337,7 @@ describe 'Device', ->
           expect(=> @device.readWorkouts()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadWorkouts').returns 3
           @device.canReadWorkouts = true
           promise = @device.readWorkouts()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -334,6 +348,7 @@ describe 'Device', ->
           expect(=> @device.readCourses()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadCourses').returns 3
           @device.canReadCourses = true
           promise = @device.readCourses()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -344,6 +359,7 @@ describe 'Device', ->
           expect(=> @device.readGoals()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadGoals').returns 3
           @device.canReadGoals = true
           promise = @device.readGoals()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -354,6 +370,7 @@ describe 'Device', ->
           expect(=> @device.readProfile()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadProfile').returns 3
           @device.canReadProfile = true
           promise = @device.readProfile()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -364,6 +381,7 @@ describe 'Device', ->
           expect(=> @device.readFITActivities()).to.throw Error
 
         it 'returns a promise of data', ->
+          Communicator.get().invoke.withArgs('StartReadFITActivities').returns 3
           @device.canReadFITActivities = true
           promise = @device.readFITActivities()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true

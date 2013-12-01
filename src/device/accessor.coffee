@@ -1,4 +1,5 @@
-{XMLParser} = require('../utils/xmlparser')
+{Communicator} = require('../../src/communicator')
+{XMLParser}    = require('../utils/xmlparser')
 
 exports.Accessor = class Accessor
   "use strict"
@@ -9,21 +10,17 @@ exports.Accessor = class Accessor
     working:  1
     waiting:  2
     finished: 3
-    error:    -1
 
-  constructor: (communicator, device, dataType, pluginMethod) ->
-    @communicator = communicator
-    @device       = device
-    @dataType     = dataType
-    @pluginMethod = pluginMethod
-
-    @pluginAction = "#{@action}#{@pluginMethod}"
+  constructor: (@device, @dataType, @pluginMethod) ->
+    @communicator = Communicator.get()
+    @pluginAction = "#{@ACTION}#{@pluginMethod}"
 
   perform: ->
     @deferred = Q.defer()
     throw new Error("Plugin is busy") if @communicator.busy()
     @communicator.invoke(@_startPluginAction(), @device.number, @dataType)
-    @_checkFinished(@deferred)
+    # @_checkFinished(@deferred)
+    @deferred.promise
 
   _startPluginAction: ->
     "Start#{@pluginAction}"
@@ -37,21 +34,21 @@ exports.Accessor = class Accessor
       when @STATUS_CODES.finished then @_onFinished(deferred)
       when @STATUS_CODES.waiting  then @_onWaiting(deferred)
       when @STATUS_CODES.idle     then @_onIdle(deferred)
-      else throw new Error("Unexpected Velociraptor.")
+      else
+        throw new Error("Unexpected Velociraptor.")
 
   _onWorking: (deferred) ->
     deferred.notify(@_progress())
     setTimeout (=> @_checkFinished(deferred)), 100
-
-  _onFinished: (deferred) ->
-    deferred.notify(percent: 100)
-    deferred.resolve(@_loadDataFromDirectory())
 
   _onWaiting: (deferred) ->
     setTimeout (=> @_checkFinished(deferred)), 500
 
   _onIdle: (deferred) ->
     deferred.reject()
+
+  _onFinished: ->
+    throw new Error("Not Implemented")
 
   _progress: ->
     progress    = {content: [], percent: 0}
@@ -68,8 +65,3 @@ exports.Accessor = class Accessor
   _getProgressXml: ->
     xml = @communicator.read("ProgressXml")
     XMLParser.parse(xml)
-
-  _loadDataFromDirectory: ->
-    switch @pluginMethod
-      when 'FitnessDirectory' then @communicator.read("TcdXml")
-      when 'FITDirectory'     then @communicator.read("DirectoryListingXml")
