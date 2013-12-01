@@ -3,15 +3,21 @@
 
 describe 'Reader', ->
   beforeEach ->
-    @communicator = sinon.createStubInstance(Communicator)
-    @device       = {number: 0}
-    @dataType     = 'test'
-    @pluginMethod = 'Foo'
-    @reader       = new Reader(@communicator, @device, @dataType, @pluginMethod)
+    @communicator             = Communicator.get()
+    @device                   = {number: 0}
+    @dataType                 = 'test'
+    @pluginMethod             = 'Foo'
+    @reader                   = new Reader(@device, @dataType, @pluginMethod)
+    @communicator.pluginProxy = {StartReadFoo: -> true}
+    @invokeSpy                = sinon.spy(@communicator, 'invoke')
+
+  afterEach ->
+    Communicator.destroy()
+    @invokeSpy.restore()
 
   describe '#perform', ->
     it 'throws an error is the plugin is busy', ->
-      @communicator.busy.returns true
+      sinon.stub(Communicator.get(), 'busy').returns true
       expect(=> @reader.perform()).to.throw Error
 
     it 'returns a promise', ->
