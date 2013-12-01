@@ -1,8 +1,10 @@
 {Communicator} = require('../src/communicator')
 {Device}       = require('../src/device')
+{Plugin}       = require('../src/plugin')
 
 describe 'Device', ->
   beforeEach ->
+    @_checkIsInstalledStub = sinon.stub(Plugin.prototype, '_checkIsInstalled')
     @communicator = Communicator.get()
     sinon.stub(@communicator, 'invoke')
     @communicator.invoke.withArgs('DeviceDescription', 0).returns """
@@ -19,6 +21,7 @@ describe 'Device', ->
     @device = new Device(0, '')
 
   afterEach ->
+    @_checkIsInstalledStub.restore()
     @communicator = Communicator.destroy()
 
   it 'sets the device id', ->
