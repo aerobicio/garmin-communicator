@@ -6,20 +6,19 @@
   "directories": {},
   "devDependencies": {
     "coffee-script": "~1.6.3",
-    "mocha": "~1.14.0",
+    "mocha": "~1.15.0",
     "coffeeify": "~0.5.2",
     "chai": "~1.8.1",
     "istanbul": "~0.1.44",
     "browserify": "~2.35.1",
-    "mocha-istanbul": "~0.2.0",
     "sinon": "~1.7.3",
     "coffeelint": "~0.6.1",
     "uglify-js": "~2.4.3",
     "underscore": "~1.5.2",
-    "mocha-phantomjs": "~3.1.6",
-    "json2htmlcov": "~0.1.1",
-    "jscoverage": "~0.3.8",
-    "q": "~0.9.7"
+    "q": "~0.9.7",
+    "jsdom": "~0.8.9",
+    "xmldom": "~0.1.16",
+    "jquery": "~1.8.3"
   },
   "scripts": {
     "lint": "make lint",

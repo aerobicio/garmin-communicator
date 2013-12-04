@@ -3,15 +3,11 @@ build:
   steps:
     - wercker/npm-install@0.9.3
     - script:
-        name: Lint
-        code: make lint
-    - script:
         name: Spec
         code: make spec
     - script:
-        name: Coverage
-        code: |
-          make check_coverage
+        name: Coverage report
+        code: make coverage_report
     - script:
         name: Build distribution
         code: |

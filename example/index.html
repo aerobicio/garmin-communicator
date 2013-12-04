@@ -1,0 +1,140 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>gamin-communicator tests</title>
+    <script src="../contrib/jquery.js"></script>
+    <script src="../node_modules/underscore/underscore.js"></script>
+    <script src="../node_modules/q/q.js"></script>
+    <script src="backbone.js"></script>
+    <script src="rivets.js"></script>
+    <script src="../dist/garmin.js"></script>
+  </head>
+  <body>
+
+    <nav id="devices">
+      <h3>Devices</h3>
+      <details rv-each-device="devices">
+        <summary>
+          <code>{{ device.id }}</code> - <span>{{ device.attributes.name }}</span>
+          <button rv-on-click="controller.activities">Load Activities</button>
+        </summary>
+        <code>
+          <table>
+            <tr>
+              <td>canReadActivities</td>
+              <td>{{ device.attributes.device.canReadActivities }}</td>
+            </tr>
+            <tr>
+              <td>canReadWorkouts</td>
+              <td>{{ device.attributes.device.canReadWorkouts }}</td>
+            </tr>
+            <tr>
+              <td>canReadCourses</td>
+              <td>{{ device.attributes.device.canReadCourses }}</td>
+            </tr>
+            <tr>
+              <td>canReadGoals</td>
+              <td>{{ device.attributes.device.canReadGoals }}</td>
+            </tr>
+            <tr>
+              <td>canReadProfile</td>
+              <td>{{ device.attributes.device.canReadProfile }}</td>
+            </tr>
+            <tr>
+              <td>canReadFITActivities</td>
+              <td>{{ device.attributes.device.canReadFITActivities }}</td>
+            </tr>
+          </table>
+        </code>
+      </details>
+    </nav>
+
+    <hr>
+
+    <div id="device-progress">
+      <progress value="0" rv-value="progress.attributes.percent" max="100"></progress>
+      {{ progress.attributes.percent }}%
+      <code>{{ progress.attributes.message }}</code>
+    </div>
+
+    <hr>
+
+    <div id="fit-files">
+      <h3>FIT Files</h3>
+      <ol>
+        <li rv-each-file="files">
+          <code>{{ file.attributes.id }}</code> {{ file.attributes.date }} {{ file.attributes.path }}
+          <button rv-on-click="controller.getData">Get Data</button>
+        </li>
+      </ol>
+    </div>
+
+    <div id="device-data">
+      <h3>Device Data</h3>
+      <pre><code>{{ data.attributes.data }}</code></pre>
+    </div>
+
+    <script>
+      $(function(){
+        rivets.configure({templateDelimiters: ['{{', '}}']})
+
+        var garmin            = new Garmin()
+        var deviceDataModel   = new Backbone.Model()
+        var fitFileCollection = new Backbone.Collection()
+        var progressModel     = new Backbone.Model()
+        var devicesCollection = new Backbone.Collection()
+
+        var deviceController = {
+          activities: function(event, collection){
+            deviceDataModel.set({ data: "" })
+            progressModel.set({ message: "", percent: 0 })
+
+            promise = collection.device.attributes.device.activities()
+
+            promise.progress(function(progress){
+              progressModel.set({ message: progress.message, percent: progress.percent })
+            }.bind(this)).then(function(data){
+              if (collection.device.attributes.device.canReadFITActivities) {
+                data.forEach(function(fitFile){
+                  fitFileCollection.add(new Backbone.Model({
+                    id:       fitFile.id,
+                    date:     fitFile.date,
+                    path:     fitFile.path,
+                    fitFile:  fitFile
+                  }))
+                })
+              } else {
+                deviceDataModel.set({ data: data })
+              }
+            }.bind(this))
+          }
+        }
+
+        var activityController = {
+          getData: function(event, collection) {
+            collection.file.attributes.fitFile.getData().then(function(data){
+              deviceDataModel.set({ data: JSON.stringify(data) })
+            })
+          }
+        }
+
+        rivets.bind($('#devices'),          { devices: devicesCollection.models, controller: deviceController })
+        rivets.bind($('#device-progress'),  { progress: progressModel })
+        rivets.bind($('#device-data'),      { data: deviceDataModel })
+        rivets.bind($('#fit-files'),        { files: fitFileCollection.models, controller: activityController })
+
+        garmin.devices().then(function(devices){
+          devices.forEach(function(device){
+            devicesCollection.add(new Backbone.Model({
+              id:               device.id,
+              name:             device.name,
+              partNumber:       device.partNumber,
+              softwareVersion:  device.softwareVersion,
+              device:           device
+            }))
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

@@ -1,85 +1,78 @@
-{Device}    = require('../src/device')
+{Plugin}    = require('../src/plugin')
 {XMLParser} = require('../src/utils/xmlparser')
 
 exports.Communicator = class Communicator
   "use strict"
 
-  constructor: ->
-    @init()
+  instance = null
 
-  init: ->
-    return @plugin if @plugin
+  @get: ->
+    instance ?= new PrivateClass
 
-    if @_smellsLikeIE()
-      @_createIEPlugin()
-    else
-      @_createPlugin()
+  @destroy: ->
+    instance = null
 
-  busy: (value) ->
-    @_busy = value if value?
-    @_busy || no
+  class PrivateClass
+    constructor: ->
+      @plugin      = new Plugin()
+      @pluginProxy = @plugin.el
 
-  isLocked: ->
-    @plugin.Locked
+    invoke: (name, args...) ->
+      fn = @pluginProxy[name]
 
-  unlock: ->
-    if @isLocked()
-      # TODO: explode if the plugin is locked for now...
-      # debugger
-      return true
+      if fn? and typeof fn is 'function'
+        fn.apply(@pluginProxy, args)
+      else
+        throw new Error("'#{name}' function does not exist!")
 
-  devices: =>
-    unless @busy()
-      @busy(yes)
-      @unlock()
-      deferred = Q.defer()
-      deferred.promise.finally => @busy(no)
-      @_findDevices(deferred)
-      deferred.promise
+    write: (name, data) ->
+      # TODO: spec me
+      if @pluginProxy.hasOwnProperty(name)
+        @pluginProxy[name] = data
 
-  _findDevices: (deferred) ->
-    @plugin.StartFindDevices()
-    @_loopUntilFinishedFindingDevices(deferred)
+    read: (name) ->
+      # TODO: spec me
+      if @pluginProxy.hasOwnProperty(name)
+        @pluginProxy[name]
 
-  _loopUntilFinishedFindingDevices: (deferred) ->
-    if @plugin.FinishFindDevices()
-      deferred.resolve(@_parseDeviceXml())
-    else
-      setTimeout (=> @_loopUntilFinishedFindingDevices(deferred)), 100
+    busy: (value) ->
+      @_busy = value if value?
+      @_busy || no
 
-  _parseDeviceXml: ->
-    xml = XMLParser.parse(@plugin.DevicesXmlString())
-    _(xml.getElementsByTagName("Device")).map (device) =>
-      name   = device.getAttribute("DisplayName")
-      number = parseInt(device.getAttribute("Number"))
-      new Device(@plugin, number, name)
+    isLocked: ->
+      @pluginProxy.Locked
 
-  _smellsLikeIE: ->
-    !window.ActiveXObject?
+    unlock: (unlock_codes) ->
+      if @isLocked()
+        # TODO: explode if the plugin is locked for now...
+        # debugger
+        return true
 
-  _createPlugin: ->
-    comm_wrapper = document.createElement 'div'
-    comm_wrapper.style.width = 0
-    comm_wrapper.style.height = 0
-    comm = document.createElement 'object'
-    comm.id = "GarminNetscapePlugin"
-    comm.height = 0
-    comm.width  = 0
-    comm.setAttribute "type", "application/vnd-garmin.mygarmin"
-    comm_wrapper.appendChild comm
-    document.body.appendChild comm_wrapper
+    devices: =>
+      unless @busy()
+        @busy(yes)
+        @unlock()
+        deferred = Q.defer()
+        deferred.promise.finally => @busy(no)
+        @_findDevices(deferred)
+        deferred.promise
 
-    @plugin = comm
+    _findDevices: (deferred) ->
+      @invoke('StartFindDevices')
+      @_loopUntilFinishedFindingDevices(deferred)
 
-  _createIEPlugin: ->
-    comm = document.createElement 'object'
-    comm.id = "GarminActiveXControl"
-    comm.style.width = 0
-    comm.style.height = 0
-    comm.style.visibility = "hidden"
-    comm.height = 0
-    comm.width = 0
-    comm.setAttribute "classid", "CLSID:099B5A62-DE20-48C6-BF9E-290A9D1D8CB5"
-    document.body.appendChild comm
+    _loopUntilFinishedFindingDevices: (deferred) ->
+      if @invoke('FinishFindDevices')
+        deferred.resolve(@_parseDeviceXml())
+      else
+        setTimeout (=> @_loopUntilFinishedFindingDevices(deferred)), 100
 
-    @plugin = comm
+    _parseDeviceXml: ->
+      # this sucks, but avoids a weird circular dependancy issue that exists
+      {Device} = require('../src/device')
+
+      xml = XMLParser.parse(@invoke('DevicesXmlString'))
+      _(xml.getElementsByTagName("Device")).map (device) =>
+        name   = device.getAttribute("DisplayName")
+        number = parseInt(device.getAttribute("Number"))
+        new Device(number, name)
