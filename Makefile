@@ -30,8 +30,8 @@ uglify:
 
 # combine compiled code for production
 compile:
-	coffee -m -o $(COMPILE)/src -c src
-	coffee -m -o $(COMPILE)/spec -c spec
+	$(COFFEE) -m -o $(COMPILE)/src -c src
+	$(COFFEE) -m -o $(COMPILE)/spec -c spec
 
 # run coffeelint over the source code
 lint:
@@ -39,11 +39,11 @@ lint:
 
 # run the test suite
 spec: lint compile
-	istanbul cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require $(SPEC)/runner.js --reporter spec $(COMPILE)/spec/*_spec.js
-	istanbul check-coverage --statements 89 --branches 67 --functions 85 --lines 89
+	$(ISTANBUL) cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require $(SPEC)/runner.js --reporter spec $(COMPILE)/spec/*_spec.js
+	$(ISTANBUL) check-coverage --statements 89 --branches 67 --functions 85 --lines 89
 
 coverage_report:
-	istanbul report
+	$(ISTANBUL) report
 
 # watch for changes; rebuild, retest
 develop:
