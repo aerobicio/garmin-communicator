@@ -20,8 +20,10 @@ clean:
 
 # build dist targets
 dist: compile browserify uglify
+	cp -R $(COMPILE)/src/**/*{.map,.js} $(DIST)/src
 
 browserify:
+	mkdir -p $(DIST)
 	$(BROWSERIFY) $(COMPILE)/src/**/*.js --outfile $(DIST)/garmin.js
 
 # uglify built code
