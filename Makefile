@@ -1,6 +1,7 @@
-COMPILE         = compile
-SRC             = src
-SPEC            = spec
+COMPILE         = ./compile
+SRC             = ./src
+SPEC            = ./spec
+DIST            = ./dist
 BIN             = node_modules/.bin
 ISTANBUL        = ./node_modules/istanbul/lib/cli.js
 MOCHA           = ./node_modules/mocha/bin/_mocha
@@ -19,20 +20,18 @@ clean:
 
 # build dist targets
 dist: compile browserify uglify
-	mkdir -p dist
-	cp $(COMPILE)/src/garmin*.js dist
 
 browserify:
-	$(BROWSERIFY) $(SRC)/*.js > $(COMPILE)/src/garmin.js
+	$(BROWSERIFY) $(COMPILE)/src/**/*.js --outfile $(DIST)/garmin.js
 
 # uglify built code
 uglify:
-	$(UGLIFYJS) $(COMPILE)/src/garmin.js --stats -o dist/garmin.min.js
+	$(UGLIFYJS) $(DIST)/garmin.js --stats -o $(DIST)/garmin.min.js
 
 # combine compiled code for production
 compile:
-	coffee -m -o compile/src -c src
-	coffee -m -o compile/spec -c spec
+	coffee -m -o $(COMPILE)/src -c src
+	coffee -m -o $(COMPILE)/spec -c spec
 
 # run coffeelint over the source code
 lint:
@@ -40,7 +39,7 @@ lint:
 
 # run the test suite
 spec: lint compile
-	istanbul cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require spec/runner.js --reporter spec compile/spec/*_spec.js
+	istanbul cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require $(SPEC)/runner.js --reporter spec $(COMPILE)/spec/*_spec.js
 	istanbul check-coverage --statements 89 --branches 67 --functions 85 --lines 89
 
 coverage_report:
