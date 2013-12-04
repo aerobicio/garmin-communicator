@@ -21,49 +21,36 @@ clean:
 	rm -f $(COMPILE)/{spec,src}/*.js $(COMPILE)/{spec,src}/*.map
 
 # build dist targets
-dist: concat minify
+dist: compile browserify uglify
+	mkdir -p dist
+	cp $(COMPILE)/src/garmin*.js dist
+
+browserify:
+	$(BROWSERIFY) $(SRC)/*.js > $(COMPILE)/src/garmin.js
 
 # uglify built code
-minify:
-	mkdir -p dist
-	cp $(COMPILE)/src/index.js dist/garmin.js
-	$(UGLIFYJS) dist/garmin.js --stats -o dist/garmin.min.js
+uglify:
+	$(UGLIFYJS) $(COMPILE)/src/garmin.js --stats -o dist/garmin.min.js
 
 # combine compiled code for production
-concat:
-	mkdir -p $(COMPILE)/{src,spec}
-	$(BROWSERIFY) -t coffeeify --extension=".coffee" $(SRC)/*.coffee > $(COMPILE)/src/index.js
-	$(BROWSERIFY) -t coffeeify --extension=".coffee" $(SPEC)/*.coffee > $(COMPILE)/spec/index.js
-
-instrument_coverage:
-	rm -rf coverage && mkdir coverage
-	$(JSCOVERAGE) --no-highlight $(COMPILE)/src $(COMPILE)/src-cov
-	rm -rf $(COMPILE)/src
-	mv $(COMPILE)/src-cov $(COMPILE)/src
-
-convert_coverage:
-	sed -i.temp '/phantomjs/d' coverage/coverage.json
-	cat coverage/coverage.json | grep --max-count=1 -e '"coverage":' | sed "s/[^0-9.]*//g" > coverage/covered_percent
-	$(JSON2HTMLCOV) coverage/coverage.json > coverage/coverage.html
-
-coverage: convert_coverage
-	$(eval COVERED_PERCENT    := $(shell cat coverage/covered_percent))
-	$(eval COVERAGE_THRESHOLD := $(shell cat .coverage))
-	$(eval COVERAGE_PASSING   := $(shell node -pe "$(COVERED_PERCENT) >= $(COVERAGE_THRESHOLD)"))
-
-	echo "$(COVERED_PERCENT) >= $(COVERAGE_THRESHOLD)"
-	test "$(COVERAGE_PASSING)" = "true"
+compile:
+	coffee -m -o compile/src -c src
+	coffee -m -o compile/spec -c spec
 
 # run coffeelint over the source code
 lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: clean concat instrument_coverage
-	$(MOCHA_PHANTOMJS) --reporter json-cov spec/index.html > coverage/coverage.json
+spec: lint compile
+	istanbul cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require spec/runner.js --reporter spec compile/spec/*_spec.js
+	istanbul check-coverage --statements 89 --branches 67 --functions 85 --lines 89
+
+coverage_report:
+	istanbul report
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean concat instrument_coverage"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile"
 
-.PHONY: spec ci-spec dist clean instrument COVERAGE_THRESHOLD
+.PHONY: spec ci-spec dist clean instrument compile

@@ -1,6 +1,8 @@
 {Communicator} = require('../src/communicator')
 
 window.Garmin = class Garmin
+  "use strict"
+
   @DEFAULT_UNLOCK_CODES:
     "file:///":         "cb1492ae040612408d87cc53e3f7ff3c"
     "http://localhost": "45517b532362fc3149e4211ade14c9b2"

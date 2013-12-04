@@ -85,7 +85,7 @@ describe 'Communicator', ->
       }
       @startFindDevicesStub     = sinon.stub(pluginProxy, 'StartFindDevices')
       @finishFindDevicesStub    = sinon.stub(pluginProxy, 'FinishFindDevices')
-      @devicesXmlStringStub     = sinon.stub(pluginProxy, 'DevicesXmlString')
+      @devicesXmlStringStub     = sinon.stub(pluginProxy, 'DevicesXmlString').returns ""
       @communicator.pluginProxy = pluginProxy
 
     afterEach ->

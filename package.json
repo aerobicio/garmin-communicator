@@ -6,7 +6,7 @@
   "directories": {},
   "devDependencies": {
     "coffee-script": "~1.6.3",
-    "mocha": "~1.14.0",
+    "mocha": "~1.15.0",
     "coffeeify": "~0.5.2",
     "chai": "~1.8.1",
     "istanbul": "~0.1.44",
@@ -19,7 +19,9 @@
     "mocha-phantomjs": "~3.1.6",
     "json2htmlcov": "git+https://github.com/plasticine/json2htmlcov.git",
     "jscoverage": "~0.3.8",
-    "q": "~0.9.7"
+    "q": "~0.9.7",
+    "jsdom": "~0.8.9",
+    "xmldom": "~0.1.16"
   },
   "scripts": {
     "lint": "make lint",
