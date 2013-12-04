@@ -8,9 +8,6 @@ COFFEE          = ./node_modules/.bin/coffee
 UGLIFYJS        = ./node_modules/.bin/uglifyjs
 BROWSERIFY      = ./node_modules/.bin/browserify
 COFFEELINT      = ./node_modules/.bin/coffeelint
-MOCHA_PHANTOMJS = ./node_modules/.bin/mocha-phantomjs
-JSCOVERAGE      = ./node_modules/.bin/jscoverage
-JSON2HTMLCOV    = ./node_modules/.bin/json2htmlcov
 
 # bootstrap the project for development
 bootstrap:
