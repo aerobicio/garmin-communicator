@@ -7,7 +7,7 @@ exports.Communicator = class Communicator
   instance = null
 
   @get: ->
-    instance ?= new PrivateClass
+    instance or= new PrivateClass()
 
   @destroy: ->
     instance = null
@@ -37,7 +37,7 @@ exports.Communicator = class Communicator
 
     busy: (value) ->
       @_busy = value if value?
-      @_busy || no
+      @_busy or no
 
     isLocked: ->
       @pluginProxy.Locked
@@ -74,5 +74,5 @@ exports.Communicator = class Communicator
       xml = XMLParser.parse(@invoke('DevicesXmlString'))
       _(xml.getElementsByTagName("Device")).map (device) =>
         name   = device.getAttribute("DisplayName")
-        number = parseInt(device.getAttribute("Number"))
+        number = parseInt(device.getAttribute("Number"), 0)
         new Device(number, name)

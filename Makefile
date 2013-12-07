@@ -24,7 +24,10 @@ dist: compile browserify uglify
 
 browserify:
 	mkdir -p $(DIST)
-	$(BROWSERIFY) $(COMPILE)/src/**/*.js --outfile $(DIST)/garmin.js
+	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile $(DIST)/garmin.js
+
+browserify_specs:
+	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js --outfile $(COMPILE)/spec/index.js
 
 # uglify built code
 uglify:
@@ -41,7 +44,7 @@ lint:
 
 # run the test suite
 spec: lint compile
-	$(ISTANBUL) cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require $(SPEC)/runner.js --reporter spec $(COMPILE)/spec/*_spec.js
+	$(ISTANBUL) cover ./node_modules/mocha/bin/_mocha -- --ui bdd --require $(SPEC)/spec_helper.js --reporter spec $(COMPILE)/spec/*_spec.js
 	$(ISTANBUL) check-coverage --statements 89 --branches 67 --functions 85 --lines 89
 
 coverage_report:
@@ -49,6 +52,6 @@ coverage_report:
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make clean compile browserify_specs"
 
 .PHONY: spec ci-spec dist clean instrument compile

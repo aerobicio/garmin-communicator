@@ -23,8 +23,8 @@ exports.Reader = class Reader extends Accessor
     @deferred.promise
 
   _clearDeviceXmlBuffers: ->
-    Communicator.get().write("TcdXml", "")
-    Communicator.get().write("DirectoryListingXml", "")
+    @communicator.write("TcdXml", "")
+    @communicator.write("DirectoryListingXml", "")
 
   _onFinished: (deferred) ->
     deferred.notify(percent: 100)
@@ -32,7 +32,7 @@ exports.Reader = class Reader extends Accessor
 
   _loadDataFromDirectory: ->
     switch @pluginMethod
-      when 'FitnessDirectory' then Communicator.get().read("TcdXml")
+      when 'FitnessDirectory' then @communicator.read("TcdXml")
       when 'FITDirectory'     then @_parseFitDirectory()
 
   _parseFitDirectory: ->
@@ -54,7 +54,7 @@ exports.Reader = class Reader extends Accessor
     @_getTypeDescriptionForFile(file) is @FITFILE_TYPES.activities
 
   _getFitDirectoryXml: ->
-    Communicator.get().read("DirectoryListingXml")
+    @communicator.read("DirectoryListingXml")
 
   _getIdForFile: (fileXml) ->
     fileXml

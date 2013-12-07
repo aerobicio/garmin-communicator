@@ -19,7 +19,7 @@ exports.Accessor = class Accessor
     @deferred = Q.defer()
     throw new Error("Plugin is busy") if @communicator.busy()
     @communicator.invoke(@_startPluginAction(), @device.number, @dataType)
-    # @_checkFinished(@deferred)
+    @_checkFinished(@deferred)
     @deferred.promise
 
   _startPluginAction: ->

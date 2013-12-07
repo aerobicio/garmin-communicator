@@ -8,12 +8,16 @@ describe 'Reader', ->
     @dataType                 = 'test'
     @pluginMethod             = 'Foo'
     @reader                   = new Reader(@device, @dataType, @pluginMethod)
-    @communicator.pluginProxy = {StartReadFoo: -> true}
-    @invokeSpy                = sinon.spy(@communicator, 'invoke')
+    @invokeStub               = sinon.stub(@communicator, 'invoke')
+    @communicator.pluginProxy = {
+      StartReadFoo: -> true
+      FinishReadFoo: -> true
+    }
+    @communicator.invoke.withArgs('FinishReadFoo').returns 3
 
   afterEach ->
     Communicator.destroy()
-    @invokeSpy.restore()
+    @invokeStub.restore()
 
   describe '#perform', ->
     it 'throws an error is the plugin is busy', ->

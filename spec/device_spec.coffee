@@ -6,7 +6,7 @@ describe 'Device', ->
   beforeEach ->
     @_checkIsInstalledStub = sinon.stub(Plugin.prototype, '_checkIsInstalled')
     @communicator = Communicator.get()
-    sinon.stub(@communicator, 'invoke')
+    @invokeStub = sinon.stub(@communicator, 'invoke')
     @communicator.invoke.withArgs('DeviceDescription', 0).returns """
       <?xml version="1.0" ?>
       <Device>
@@ -22,6 +22,7 @@ describe 'Device', ->
 
   afterEach ->
     @_checkIsInstalledStub.restore()
+    @invokeStub.restore()
     @communicator = Communicator.destroy()
 
   it 'sets the device id', ->
@@ -315,21 +316,13 @@ describe 'Device', ->
       @_setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
-      beforeEach ->
-        @communicator.invoke.restore()
-        sinon.stub(@communicator, 'invoke')
-
-      afterEach ->
-        @communicator.invoke.restore()
-        Communicator.destroy()
-
       describe '#readActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadActivities = false
           expect(=> @device.readActivities()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadActivities').returns 3
+          @communicator.invoke.withArgs('FinishReadFitnessDirectory').returns 3
           @device.canReadActivities = true
           promise = @device.readActivities()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -340,7 +333,7 @@ describe 'Device', ->
           expect(=> @device.readWorkouts()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadWorkouts').returns 3
+          @communicator.invoke.withArgs('FinishReadFitnessData').returns 3
           @device.canReadWorkouts = true
           promise = @device.readWorkouts()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -351,7 +344,7 @@ describe 'Device', ->
           expect(=> @device.readCourses()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadCourses').returns 3
+          @communicator.invoke.withArgs('FinishReadFitnessData').returns 3
           @device.canReadCourses = true
           promise = @device.readCourses()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -362,7 +355,7 @@ describe 'Device', ->
           expect(=> @device.readGoals()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadGoals').returns 3
+          @communicator.invoke.withArgs('FinishReadFitnessData').returns 3
           @device.canReadGoals = true
           promise = @device.readGoals()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
@@ -373,18 +366,40 @@ describe 'Device', ->
           expect(=> @device.readProfile()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadProfile').returns 3
+          @communicator.invoke.withArgs('FinishReadFitnessData').returns 3
           @device.canReadProfile = true
           promise = @device.readProfile()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
 
       describe '#readFITActivities', ->
+        beforeEach ->
+          @readStub = sinon.stub(@communicator, 'read')
+          @communicator.read.withArgs('DirectoryListingXml').returns """
+            <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+            <DirectoryListing xmlns="http://www.garmin.com/xmlschemas/DirectoryListing/v1" RequestedPath="" UnitId="3856053743" VolumePrefix="">
+              <File IsDirectory="false" Path="Activities/20130305-210510-1-1499-ANTFS-4-0.FIT">
+                <CreationTime>2013-03-05T10:05:10Z</CreationTime>
+                <FitId>
+                  <Id>731412310</Id>
+                  <FileType>4</FileType>
+                  <Manufacturer>1</Manufacturer>
+                  <Product>1499</Product>
+                  <SerialNumber>3856053743</SerialNumber>
+                  <FileNumber>0</FileNumber>
+                </FitId>
+              </File>
+            </DirectoryListing>
+          """
+
+        afterEach ->
+          @readStub.restore()
+
         it 'throws an exception if the device does not support the action', ->
           @device.canReadFITActivities = false
           expect(=> @device.readFITActivities()).to.throw Error
 
         it 'returns a promise of data', ->
-          Communicator.get().invoke.withArgs('StartReadFITActivities').returns 3
+          @communicator.invoke.withArgs('FinishReadFITDirectory').returns 3
           @device.canReadFITActivities = true
           promise = @device.readFITActivities()
           expect(promise? and _(promise).isObject() and promise.isFulfilled?).to.equal true
