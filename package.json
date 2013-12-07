@@ -18,7 +18,7 @@
     "q": "~0.9.7",
     "jsdom": "~0.8.9",
     "xmldom": "~0.1.16",
-    "jquery": "~1.8.3",
+    "jquery": "~1.8.3"
   },
   "scripts": {
     "lint": "make lint",
