@@ -11,7 +11,11 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "spec"
+    "spec",
+    "compile",
+    "wercker.yml",
+    "Makefile",
+    "example"
   ],
   "dependencies": {
     "q": "~0.9.7",
