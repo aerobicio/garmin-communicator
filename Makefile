@@ -35,8 +35,8 @@ uglify:
 
 # combine compiled code for production
 compile:
-	$(COFFEE) -m -o $(COMPILE)/src -c src
-	$(COFFEE) -m -o $(COMPILE)/spec -c spec
+	$(COFFEE) -m -o $(COMPILE)/src/ -c src
+	$(COFFEE) -m -o $(COMPILE)/spec/ -c spec
 
 # run coffeelint over the source code
 lint:
@@ -44,14 +44,14 @@ lint:
 
 # run the test suite
 spec: lint compile
-	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec $(COMPILE)/spec/*_spec.js
-	$(ISTANBUL) check-coverage --statements 89 --branches 67 --functions 85 --lines 89
+	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec "$(COMPILE)/spec/**/*_spec.js"
+	$(ISTANBUL) check-coverage --statements 86 --branches 70 --functions 81 --lines 86
 
 coverage_report:
 	$(ISTANBUL) report
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make spec"
+	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make spec &"
 
 .PHONY: spec ci-spec dist clean instrument compile
