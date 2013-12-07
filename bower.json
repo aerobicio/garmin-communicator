@@ -15,7 +15,8 @@
     "compile",
     "wercker.yml",
     "Makefile",
-    "example"
+    "example",
+    "src"
   ],
   "dependencies": {
     "q": "~0.9.7",

@@ -20,7 +20,6 @@ clean:
 
 # build dist targets
 dist: compile browserify uglify
-	cp -R $(COMPILE)/src $(DIST)/src
 
 browserify:
 	mkdir -p $(DIST)
