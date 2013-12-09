@@ -518,15 +518,11 @@
 
   exports.FitFile = FitFile = (function() {
     "use strict";
-    FitFile.prototype.UUENCODE_HEADER_REGEX = /^.+\r*\n/;
-
-    FitFile.prototype.UUENCODE_INVALID_CHARS_REGEX = /[^A-Za-z0-9\+\/\=]/g;
-
-    function FitFile(device, id, type, data, path) {
-      this.device = device;
+    function FitFile(device, id, type, date, path) {
       this.id = id;
+      this.device = device;
       this.type = type;
-      this.data = data;
+      this.date = date;
       this.path = path;
       this.communicator = Communicator.get();
     }

@@ -3,10 +3,12 @@
 exports.FitFile = class FitFile
   "use strict"
 
-  UUENCODE_HEADER_REGEX: /^.+\r*\n/
-  UUENCODE_INVALID_CHARS_REGEX: /[^A-Za-z0-9\+\/\=]/g
-
-  constructor: (@device, @id, @type, @data, @path) ->
+  constructor: (device, id, type, date, path) ->
+    @id = id
+    @device = device
+    @type = type
+    @date = date
+    @path = path
     @communicator = Communicator.get()
 
   getData: ->

@@ -1,6 +1,6 @@
 {
   "name": "garmin-communicator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A sane re-write of the garmin-communicator plugin.",
   "main": "dist/garmin.js",
   "directories": {},
