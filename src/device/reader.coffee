@@ -1,89 +1,39 @@
-{Communicator} = require('../../src/communicator')
-{Accessor}     = require('./accessor')
-{XMLParser}    = require('../utils/xmlparser')
-{FitFile}      = require('../../src/fitfile')
-{TcxFile}      = require('../../src/tcxfile')
+{Communicator}      = require('../communicator')
+{Accessor}          = require('./accessor')
+{FitWorkoutFactory} = require('../workouts/fit_workout_factory')
+{TcxWorkoutFactory} = require('../workouts/tcx_workout_factory')
 
 exports.Reader = class Reader extends Accessor
   "use strict"
 
   ACTION: "Read"
-  FITFILE_TYPES:
-    activities: 4
-    goals:      11
-    locations:  8
-    monitoring: 9
-    profiles:   2
-    schedules:  7
-    sports:     3
-    totals:     10
 
   perform: ->
-    @_clearDeviceXmlBuffers()
+    @clearDeviceXmlBuffers()
     super
     @deferred.promise
 
-  _clearDeviceXmlBuffers: ->
+  clearDeviceXmlBuffers: ->
     @communicator.write("TcdXml", "")
     @communicator.write("DirectoryListingXml", "")
 
   _onFinished: (deferred) ->
     deferred.notify(percent: 100)
-    deferred.resolve(@_loadData())
+    deferred.resolve(@handleFinishedReading())
 
-  _loadData: ->
+  handleFinishedReading: ->
     switch @pluginMethod
-      when 'FitnessDirectory' then @_parseTcdXml()
-      when 'FITDirectory'     then @_parseFitDirectory()
+      when 'FITDirectory'     then @handleReadFITDirectory()
+      when 'FitnessDirectory' then @handleReadFitnessDirectory()
+      when 'FitnessDetail'    then @handleReadFitnessDetail()
 
-  _parseTcdXml: ->
-    xml = @communicator.read("TcdXml")
-    new TcxFile(xml)
+  handleReadFITDirectory: ->
+    data = @communicator.read("DirectoryListingXml")
+    new FitWorkoutFactory(@device).produce(data)
 
-  _parseFitDirectory: ->
-    xml = XMLParser.parse(@_getFitDirectoryXml())
+  handleReadFitnessDirectory: ->
+    data = @communicator.read("TcdXml")
+    new TcxWorkoutFactory(@device).produce(data)
 
-    _.chain(xml.getElementsByTagName("File"))
-      .filter(@_filterFileXmlType)
-      .map(@_fitObjectForFile)
-      .value()
-
-  _fitObjectForFile: (file) =>
-    id   = @_getIdForFile(file)
-    type = @_getTypeDescriptionForFile(file)
-    date = @_getDateObjectForFile(file)
-    path = @_getPathForFile(file)
-    new FitFile(@device, id, type, date, path)
-
-  _filterFileXmlType: (file) =>
-    @_getTypeDescriptionForFile(file) is @FITFILE_TYPES.activities
-
-  _getFitDirectoryXml: ->
-    @communicator.read("DirectoryListingXml")
-
-  _getIdForFile: (fileXml) ->
-    fileXml
-      .getElementsByTagName("FitId")[0]
-      .getElementsByTagName("Id")[0]
-      .textContent
-
-  _getDateObjectForFile: (fileXml) ->
-    console.log fileXml.getElementsByTagName("CreationTime")[0].textContent
-    # http://stackoverflow.com/questions/14238261/convert-yyyy-mm-ddthhmmss-fffz-to-datetime-in-javascript-manually
-    @REPLACE_DATE_DASHES_REGEX ||= /-/g
-    @REPLACE_DATE_TZ_REGEX     ||= /[TZ]/g
-    formattedDateString = fileXml.getElementsByTagName("CreationTime")[0]
-      .textContent
-      .replace(@REPLACE_DATE_DASHES_REGEX, "/")
-      .replace(@REPLACE_DATE_TZ_REGEX, " ")
-    new Date(formattedDateString)
-
-  _getTypeDescriptionForFile: (fileXml) ->
-    parseInt fileXml
-      .getElementsByTagName("FitId")[0]
-      .getElementsByTagName("FileType")[0]
-      .textContent
-
-  _getPathForFile: (file) ->
-    file.getAttribute("Path")
-
+  handleReadFitnessDetail: ->
+    @communicator.read("TcdXml")

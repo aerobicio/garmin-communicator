@@ -59,18 +59,18 @@
 
     <hr>
 
-    <div id="fit-files">
-      <h3>FIT Files</h3>
+    <div id="workouts">
+      <h3>Workouts</h3>
       <ol>
-        <li rv-each-file="files">
-          <code>{{ file.attributes.id }}</code> {{ file.attributes.date }} {{ file.attributes.path }}
+        <li rv-each-workout="workouts">
+          <code>{{ workout.attributes.id }}</code> {{ workout.attributes.date }} {{ workout.attributes.path }}
           <button rv-on-click="controller.getData">Get Data</button>
         </li>
       </ol>
     </div>
 
     <div id="device-data">
-      <h3>Device Data</h3>
+      <h3>Workout Data</h3>
       <pre><code>{{ data.attributes.data }}</code></pre>
     </div>
 
@@ -83,7 +83,7 @@
         };
         var garmin            = new Garmin({unlockCodes: unlockCodes})
         var deviceDataModel   = new Backbone.Model()
-        var fitFileCollection = new Backbone.Collection()
+        var workoutsCollection = new Backbone.Collection()
         var progressModel     = new Backbone.Model()
         var devicesCollection = new Backbone.Collection()
 
@@ -96,26 +96,22 @@
 
             promise.progress(function(progress){
               progressModel.set({ message: progress.message, percent: progress.percent })
-            }.bind(this)).then(function(data){
-              if (collection.device.attributes.device.canReadFITActivities) {
-                data.forEach(function(fitFile){
-                  fitFileCollection.add(new Backbone.Model({
-                    id:       fitFile.id,
-                    date:     fitFile.date,
-                    path:     fitFile.path,
-                    fitFile:  fitFile
-                  }))
-                })
-              } else {
-                deviceDataModel.set({ data: data })
-              }
+            }.bind(this)).then(function(workouts){
+              workouts.forEach(function(workout){
+                workoutsCollection.add(new Backbone.Model({
+                  id:       workout.id,
+                  date:     workout.date,
+                  path:     workout.path,
+                  workout:  workout
+                }))
+              })
             }.bind(this))
           }
         }
 
         var activityController = {
           getData: function(event, collection) {
-            collection.file.attributes.fitFile.getData().then(function(data){
+            collection.workout.attributes.workout.getData().then(function(data){
               deviceDataModel.set({ data: JSON.stringify(data) })
             })
           }
@@ -124,7 +120,7 @@
         rivets.bind($('#devices'),          { devices: devicesCollection.models, controller: deviceController })
         rivets.bind($('#device-progress'),  { progress: progressModel })
         rivets.bind($('#device-data'),      { data: deviceDataModel })
-        rivets.bind($('#fit-files'),        { files: fitFileCollection.models, controller: activityController })
+        rivets.bind($('#workouts'),        { workouts: workoutsCollection.models, controller: activityController })
 
         garmin.devices().then(function(devices){
           devices.forEach(function(device){

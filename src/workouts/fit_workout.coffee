@@ -1,6 +1,6 @@
-{Communicator} = require('../src/communicator')
+{Communicator} = require('../../src/communicator')
 
-exports.FitFile = class FitFile
+exports.FitWorkout = class FitWorkout
   "use strict"
 
   constructor: (device, id, type, date, path) ->
