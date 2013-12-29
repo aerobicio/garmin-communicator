@@ -7,12 +7,12 @@ exports.Communicator = class Communicator
   instance = null
 
   @get: ->
-    instance or= new PrivateClass()
+    instance or= new PrivateCommunicator()
 
   @destroy: ->
     instance = null
 
-  class PrivateClass
+  class PrivateCommunicator
     constructor: ->
       @plugin      = new Plugin()
       @pluginProxy = @plugin.el
@@ -26,12 +26,10 @@ exports.Communicator = class Communicator
         throw new Error("'#{name}' function does not exist!")
 
     write: (name, data) ->
-      # TODO: spec me
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name] = data
 
     read: (name) ->
-      # TODO: spec me
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name]
 
@@ -42,11 +40,12 @@ exports.Communicator = class Communicator
     isLocked: ->
       @pluginProxy.Locked
 
-    unlock: (unlock_codes) ->
+    unlock: (unlockCodes) ->
       if @isLocked()
-        # TODO: explode if the plugin is locked for now...
-        # debugger
-        return true
+        unlocked = false
+        _(unlockCodes).map (unlockKey, domain) =>
+          unlocked ||= @invoke('Unlock', domain, unlockKey)
+        unlocked
 
     devices: =>
       unless @busy()

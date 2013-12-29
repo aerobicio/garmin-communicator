@@ -18,7 +18,9 @@ exports.Accessor = class Accessor
   perform: ->
     @deferred = Q.defer()
     throw new Error("Plugin is busy") if @communicator.busy()
-    @communicator.invoke(@_startPluginAction(), @device.number, @dataType)
+    argsArray = Array.prototype.slice.call(arguments, 0)
+    args = [@_startPluginAction(), @device.number, @dataType].concat(argsArray)
+    @communicator.invoke.apply(@communicator, args)
     @_checkFinished(@deferred)
     @deferred.promise
 
@@ -48,7 +50,7 @@ exports.Accessor = class Accessor
     deferred.reject()
 
   _onFinished: ->
-    throw new Error("Not Implemented")
+    throw new Error("Abstract method: Not Implemented")
 
   _progress: ->
     progress    = {content: [], percent: 0}

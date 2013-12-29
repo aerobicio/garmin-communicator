@@ -21,7 +21,7 @@ exports.XMLParser = class XMLParser
     window.DOMParser?
 
   @_xmlDomAvailable: ->
-    window.ActiveXObject? and window.ActiveXObject("Microsoft.XMLDOM")
+    window.ActiveXObject? and window.ActiveXObject?("Microsoft.XMLDOM")
 
   @_domParser: (xml) ->
     new window.DOMParser().parseFromString(xml, "text/xml")

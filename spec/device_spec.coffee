@@ -1,6 +1,7 @@
 {Communicator} = require('../src/communicator')
 {Device}       = require('../src/device')
 {Plugin}       = require('../src/plugin')
+{Reader}       = require('../src/device/reader')
 
 describe 'Device', ->
   beforeEach ->
@@ -36,6 +37,21 @@ describe 'Device', ->
 
   it 'sets the device software version', ->
     expect(@device.softwareVersion).to.equal "300"
+
+  describe '#activities', ->
+    describe 'the device can read FIT activities', ->
+      it 'reads FIT activities', ->
+        @device.canReadFITActivities = true
+        @device.readFITActivities = sinon.stub()
+        @device.activities()
+        chai.expect(@device.readFITActivities.calledOnce).to.be.true
+
+    describe 'the device cannot read FIT activities', ->
+      it 'reads TCX activities', ->
+        @device.canReadFITActivities = false
+        @device.readActivities = sinon.stub()
+        @device.activities()
+        chai.expect(@device.readActivities.calledOnce).to.be.true
 
   describe 'Capabilities', ->
     beforeEach ->
@@ -316,6 +332,12 @@ describe 'Device', ->
       @_setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
+      beforeEach ->
+        @handleFinishedReading = sinon.stub(Reader.prototype, 'handleFinishedReading')
+
+      afterEach ->
+        @handleFinishedReading.restore()
+
       describe '#readActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadActivities = false

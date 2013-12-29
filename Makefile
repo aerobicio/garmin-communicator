@@ -1,7 +1,6 @@
 COMPILE         = ./compile
 SRC             = ./src
 SPEC            = ./spec
-DIST            = ./dist
 BIN             = node_modules/.bin
 ISTANBUL        = ./node_modules/istanbul/lib/cli.js
 MOCHA           = ./node_modules/mocha/bin/_mocha
@@ -22,15 +21,14 @@ clean:
 dist: compile browserify uglify
 
 browserify:
-	mkdir -p $(DIST)
-	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile $(DIST)/garmin.js
+	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile garmin.js
 
 browserify_specs:
-	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js --outfile $(COMPILE)/spec/index.js
+	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js $(COMPILE)/spec/device/*_spec.js $(COMPILE)/spec/utils/*_spec.js $(COMPILE)/spec/workouts/*_spec.js --outfile $(COMPILE)/spec/index.js
 
 # uglify built code
 uglify:
-	$(UGLIFYJS) $(DIST)/garmin.js --stats -o $(DIST)/garmin.min.js
+	$(UGLIFYJS) garmin.js --stats -o garmin.min.js
 
 # combine compiled code for production
 compile:
@@ -42,7 +40,7 @@ lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: lint compile
+spec: lint compile browserify_specs
 	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec "$(COMPILE)/spec/**/*_spec.js"
 	$(ISTANBUL) check-coverage --statements 85 --branches 70 --functions 81 --lines 86
 
@@ -51,6 +49,6 @@ coverage_report:
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make spec &"
+	fswatch $(SRC):$(SPEC) "make spec &"
 
 .PHONY: spec ci-spec dist clean instrument compile

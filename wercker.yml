@@ -16,7 +16,8 @@ build:
     - script:
         name: Save Artifacts
         code: |
-          cp -R dist $WERCKER_REPORT_ARTIFACTS_DIR
+          cp -R garmin.js $WERCKER_REPORT_ARTIFACTS_DIR
+          cp -R garmin.min.js $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
     - wercker/campfire-notify@0.1.1:
         token: $CAMPFIRE_TOKEN
