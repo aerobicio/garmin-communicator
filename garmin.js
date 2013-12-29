@@ -11,28 +11,28 @@
 
   exports.Communicator = Communicator = (function() {
     "use strict";
-    var PrivateClass, instance;
+    var PrivateCommunicator, instance;
 
     function Communicator() {}
 
     instance = null;
 
     Communicator.get = function() {
-      return instance || (instance = new PrivateClass());
+      return instance || (instance = new PrivateCommunicator());
     };
 
     Communicator.destroy = function() {
       return instance = null;
     };
 
-    PrivateClass = (function() {
-      function PrivateClass() {
+    PrivateCommunicator = (function() {
+      function PrivateCommunicator() {
         this.devices = __bind(this.devices, this);
         this.plugin = new Plugin();
         this.pluginProxy = this.plugin.el;
       }
 
-      PrivateClass.prototype.invoke = function() {
+      PrivateCommunicator.prototype.invoke = function() {
         var args, fn, name;
         name = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         fn = this.pluginProxy[name];
@@ -43,36 +43,38 @@
         }
       };
 
-      PrivateClass.prototype.write = function(name, data) {
+      PrivateCommunicator.prototype.write = function(name, data) {
         if (this.pluginProxy.hasOwnProperty(name)) {
           return this.pluginProxy[name] = data;
         }
       };
 
-      PrivateClass.prototype.read = function(name) {
+      PrivateCommunicator.prototype.read = function(name) {
         if (this.pluginProxy.hasOwnProperty(name)) {
           return this.pluginProxy[name];
         }
       };
 
-      PrivateClass.prototype.busy = function(value) {
+      PrivateCommunicator.prototype.busy = function(value) {
         if (value != null) {
           this._busy = value;
         }
         return this._busy || false;
       };
 
-      PrivateClass.prototype.isLocked = function() {
+      PrivateCommunicator.prototype.isLocked = function() {
         return this.pluginProxy.Locked;
       };
 
-      PrivateClass.prototype.unlock = function(unlock_codes) {
-        if (this.isLocked()) {
-          return true;
-        }
+      PrivateCommunicator.prototype.unlock = function(unlock_codes) {
+        var _this = this;
+        return _(unlock_codes).map(function(unlockKey, domain) {
+          console.log(domain, unlockKey);
+          return console.log(_this.invoke('Unlock', domain, unlockKey));
+        });
       };
 
-      PrivateClass.prototype.devices = function() {
+      PrivateCommunicator.prototype.devices = function() {
         var deferred,
           _this = this;
         if (!this.busy()) {
@@ -87,12 +89,12 @@
         }
       };
 
-      PrivateClass.prototype._findDevices = function(deferred) {
+      PrivateCommunicator.prototype._findDevices = function(deferred) {
         this.invoke('StartFindDevices');
         return this._loopUntilFinishedFindingDevices(deferred);
       };
 
-      PrivateClass.prototype._loopUntilFinishedFindingDevices = function(deferred) {
+      PrivateCommunicator.prototype._loopUntilFinishedFindingDevices = function(deferred) {
         var _this = this;
         if (this.invoke('FinishFindDevices')) {
           return deferred.resolve(this._parseDeviceXml());
@@ -103,7 +105,7 @@
         }
       };
 
-      PrivateClass.prototype._parseDeviceXml = function() {
+      PrivateCommunicator.prototype._parseDeviceXml = function() {
         var Device, xml,
           _this = this;
         Device = require('../src/device').Device;
@@ -116,7 +118,7 @@
         });
       };
 
-      return PrivateClass;
+      return PrivateCommunicator;
 
     })();
 
@@ -566,7 +568,7 @@
 
   window.Garmin = Garmin = (function() {
     "use strict";
-    Garmin.DEFAULT_UNLOCK_CODES = {
+    Garmin.prototype.DEFAULT_UNLOCK_CODES = {
       "file:///": "cb1492ae040612408d87cc53e3f7ff3c",
       "http://localhost": "45517b532362fc3149e4211ade14c9b2",
       "http://127.0.0.1": "40cd4860f7988c53b15b8491693de133"
@@ -576,13 +578,27 @@
       if (options == null) {
         options = {};
       }
+      this.communicator = Communicator.get();
       this.options = _(options).defaults({
-        unlock_codes: this.DEFAULT_UNLOCK_CODES
+        unlock_codes: this.mergeUnlockCodes(options.unlock_codes)
       });
+      this.unlock();
     }
 
+    Garmin.prototype.mergeUnlockCodes = function(unlockCodes) {
+      if (unlockCodes == null) {
+        unlockCodes = {};
+      }
+      return _(this.DEFAULT_UNLOCK_CODES).defaults(unlockCodes);
+    };
+
+    Garmin.prototype.unlock = function() {
+      console.log('unlock', this.options.unlock_codes);
+      return this.communicator.unlock(this.options.unlock_codes);
+    };
+
     Garmin.prototype.devices = function() {
-      return Communicator.get().devices();
+      return this.communicator.devices();
     };
 
     return Garmin;
