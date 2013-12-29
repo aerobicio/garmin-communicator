@@ -26,12 +26,10 @@ exports.Communicator = class Communicator
         throw new Error("'#{name}' function does not exist!")
 
     write: (name, data) ->
-      # TODO: spec me
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name] = data
 
     read: (name) ->
-      # TODO: spec me
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name]
 
@@ -42,10 +40,12 @@ exports.Communicator = class Communicator
     isLocked: ->
       @pluginProxy.Locked
 
-    unlock: (unlock_codes) ->
+    unlock: (unlockCodes) ->
       if @isLocked()
-        _(unlock_codes).map (unlockKey, domain) =>
-          @invoke('Unlock', domain, unlockKey)
+        unlocked = false
+        _(unlockCodes).map (unlockKey, domain) =>
+          unlocked ||= @invoke('Unlock', domain, unlockKey)
+        unlocked
 
     devices: =>
       unless @busy()

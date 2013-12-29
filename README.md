@@ -11,7 +11,7 @@
 
 ##### Install developments tools:
 - `npm install`
-- `brew install fswatch`
+- `brew install fswatch terminal-notifier`
 
 ###### Watch files, recompile on change
 - `make develop`

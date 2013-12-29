@@ -66,12 +66,15 @@
         return this.pluginProxy.Locked;
       };
 
-      PrivateCommunicator.prototype.unlock = function(unlock_codes) {
-        var _this = this;
+      PrivateCommunicator.prototype.unlock = function(unlockCodes) {
+        var unlocked,
+          _this = this;
         if (this.isLocked()) {
-          return _(unlock_codes).map(function(unlockKey, domain) {
-            return _this.invoke('Unlock', domain, unlockKey);
+          unlocked = false;
+          _(unlockCodes).map(function(unlockKey, domain) {
+            return unlocked || (unlocked = _this.invoke('Unlock', domain, unlockKey));
           });
+          return unlocked;
         }
       };
 
@@ -636,7 +639,7 @@
     };
 
     XMLParser._xmlDomAvailable = function() {
-      return (window.ActiveXObject != null) && window.ActiveXObject("Microsoft.XMLDOM");
+      return (window.ActiveXObject != null) && (typeof window.ActiveXObject === "function" ? window.ActiveXObject("Microsoft.XMLDOM") : void 0);
     };
 
     XMLParser._domParser = function(xml) {
@@ -734,7 +737,7 @@
     FitWorkoutFactory.prototype._objectForFileNode = function(file) {
       var date, id, path, type;
       id = this._getIdForFileNode(file);
-      type = this._getTypeDescriptionForFileNode(file);
+      type = this._getFileTypeForFileNode(file);
       date = this._getCreationTimeFileNode(file);
       path = this._getPathForFileNode(file);
       return new FitWorkout(this.device, id, type, date, path);
@@ -747,14 +750,14 @@
     };
 
     FitWorkoutFactory.prototype._filterFitFileXmlType = function(file) {
-      return this._getTypeDescriptionForFileNode(file) === this.FITFILE_TYPES.activities;
+      return this._getFileTypeForFileNode(file) === this.FITFILE_TYPES.activities;
     };
 
     FitWorkoutFactory.prototype._getIdForFileNode = function(fileXml) {
-      return fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("Id")[0].textContent;
+      return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("Id")[0].textContent);
     };
 
-    FitWorkoutFactory.prototype._getTypeDescriptionForFileNode = function(fileXml) {
+    FitWorkoutFactory.prototype._getFileTypeForFileNode = function(fileXml) {
       return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("FileType")[0].textContent);
     };
 

@@ -14,7 +14,7 @@ exports.FitWorkoutFactory = class FitWorkoutFactory extends WorkoutFactory
 
   _objectForFileNode: (file) =>
     id   = @_getIdForFileNode(file)
-    type = @_getTypeDescriptionForFileNode(file)
+    type = @_getFileTypeForFileNode(file)
     date = @_getCreationTimeFileNode(file)
     path = @_getPathForFileNode(file)
 
@@ -27,15 +27,15 @@ exports.FitWorkoutFactory = class FitWorkoutFactory extends WorkoutFactory
     @_parseISODateString(dateTimeString)
 
   _filterFitFileXmlType: (file) =>
-    @_getTypeDescriptionForFileNode(file) is @FITFILE_TYPES.activities
+    @_getFileTypeForFileNode(file) is @FITFILE_TYPES.activities
 
   _getIdForFileNode: (fileXml) ->
-    fileXml
+    parseInt fileXml
       .getElementsByTagName("FitId")[0]
       .getElementsByTagName("Id")[0]
       .textContent
 
-  _getTypeDescriptionForFileNode: (fileXml) ->
+  _getFileTypeForFileNode: (fileXml) ->
     parseInt fileXml
       .getElementsByTagName("FitId")[0]
       .getElementsByTagName("FileType")[0]

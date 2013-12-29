@@ -14,7 +14,6 @@ exports.TcxWorkoutFactory = class TcxWorkoutFactory extends WorkoutFactory
   _objectForActivityNode: (activity) =>
     id   = @_getIdForActivityNode(activity)
     date = @_getFirstLapStartTime(activity)
-
     new TcxWorkout(@device, id, date)
 
   _getFirstLapStartTime: (activity) =>

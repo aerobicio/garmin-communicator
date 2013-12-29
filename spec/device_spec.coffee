@@ -1,6 +1,7 @@
 {Communicator} = require('../src/communicator')
 {Device}       = require('../src/device')
 {Plugin}       = require('../src/plugin')
+{Reader}       = require('../src/device/reader')
 
 describe 'Device', ->
   beforeEach ->
@@ -331,6 +332,12 @@ describe 'Device', ->
       @_setDeviceInfoStub.restore()
 
     describe 'Reading data', ->
+      beforeEach ->
+        @handleFinishedReading = sinon.stub(Reader.prototype, 'handleFinishedReading')
+
+      afterEach ->
+        @handleFinishedReading.restore()
+
       describe '#readActivities', ->
         it 'throws an exception if the device does not support the action', ->
           @device.canReadActivities = false

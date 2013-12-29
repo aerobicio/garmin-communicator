@@ -24,7 +24,7 @@ browserify:
 	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile garmin.js
 
 browserify_specs:
-	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js --outfile $(COMPILE)/spec/index.js
+	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js $(COMPILE)/spec/device/*_spec.js $(COMPILE)/spec/utils/*_spec.js $(COMPILE)/spec/workouts/*_spec.js --outfile $(COMPILE)/spec/index.js
 
 # uglify built code
 uglify:
@@ -43,6 +43,7 @@ lint:
 spec: lint compile browserify_specs
 	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec "$(COMPILE)/spec/**/*_spec.js"
 	$(ISTANBUL) check-coverage --statements 85 --branches 70 --functions 81 --lines 86
+	terminal-notifier -title 'Coverage Failing' -message 'Check your Apple stock!'
 
 coverage_report:
 	$(ISTANBUL) report

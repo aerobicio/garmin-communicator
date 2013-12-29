@@ -20,6 +20,7 @@ describe 'XMLParser', ->
     afterEach ->
       @domParserAvailableStub.restore()
       @xmlDomAvailableStub.restore()
+      XMLParser._parser = null
 
     it "throws an error when no parser is available", ->
       @domParserAvailableStub.returns false
@@ -29,7 +30,11 @@ describe 'XMLParser', ->
     describe "when DOMParser is available", ->
       beforeEach ->
         @domParserAvailableStub.returns true
-        @parserStub = window.DOMParser = {parseFromString: -> return}
+        unless window.DOMParser?
+          @parserStub = sinon.stub(window, 'DOMParser')
+
+      afterEach ->
+        @parserStub?.restore()
 
       it "uses DOMParser", ->
         XMLParser._getParser() is XMLParser._domParser
