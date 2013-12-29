@@ -7,12 +7,12 @@ exports.Communicator = class Communicator
   instance = null
 
   @get: ->
-    instance or= new PrivateClass()
+    instance or= new PrivateCommunicator()
 
   @destroy: ->
     instance = null
 
-  class PrivateClass
+  class PrivateCommunicator
     constructor: ->
       @plugin      = new Plugin()
       @pluginProxy = @plugin.el
@@ -44,7 +44,8 @@ exports.Communicator = class Communicator
 
     unlock: (unlock_codes) ->
       if @isLocked()
-        return true
+        _(unlock_codes).map (unlockKey, domain) =>
+          @invoke('Unlock', domain, unlockKey)
 
     devices: =>
       unless @busy()

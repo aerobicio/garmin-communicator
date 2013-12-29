@@ -12,6 +12,7 @@ window.Garmin = class Garmin
     @communicator = Communicator.get()
     @options = _(options).defaults
       unlock_codes: @mergeUnlockCodes(options.unlock_codes)
+    @unlock()
 
   mergeUnlockCodes: (unlockCodes = {}) ->
     _(@DEFAULT_UNLOCK_CODES).defaults(unlockCodes)

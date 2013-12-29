@@ -7,7 +7,7 @@
     <script src="../node_modules/q/q.js"></script>
     <script src="backbone.js"></script>
     <script src="rivets.js"></script>
-    <script src="../dist/garmin.js"></script>
+    <script src="../garmin.js"></script>
   </head>
   <body>
 
@@ -78,7 +78,10 @@
       $(function(){
         rivets.configure({templateDelimiters: ['{{', '}}']})
 
-        var garmin            = new Garmin()
+        var unlockCodes = {
+          "http://aerobic.io:8000/example/": "208ce96db2618ddb3a6ba6efa58b76cd"
+        };
+        var garmin            = new Garmin({unlock_codes: unlockCodes})
         var deviceDataModel   = new Backbone.Model()
         var fitFileCollection = new Backbone.Collection()
         var progressModel     = new Backbone.Model()
