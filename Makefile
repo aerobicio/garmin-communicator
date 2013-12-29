@@ -40,7 +40,7 @@ lint:
 	$(COFFEELINT) -r src
 
 # run the test suite
-spec: lint compile
+spec: lint compile browserify_specs
 	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec "$(COMPILE)/spec/**/*_spec.js"
 	$(ISTANBUL) check-coverage --statements 85 --branches 70 --functions 81 --lines 86
 
@@ -49,6 +49,6 @@ coverage_report:
 
 # watch for changes; rebuild, retest
 develop:
-	wachs -o "$(SRC)/**/*.coffee,$(SPEC)/**/*.html,$(SPEC)/**/*.coffee" "make spec &"
+	fswatch $(SRC):$(SPEC) "make spec &"
 
 .PHONY: spec ci-spec dist clean instrument compile

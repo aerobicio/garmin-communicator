@@ -11,11 +11,14 @@
 
 ##### Install developments tools:
 - `npm install`
-- `npm install wach` (platform dependant so this cannot be an npm dependancy)
+- `brew install fswatch`
 
 ###### Watch files, recompile on change
 - `make develop`
-- open `./spec/index.html`
+
+You can now either run the suite in-browser by opening `./spec/index.html`, or
+just edit files, and the suite will be run whenever a spec or source file is
+saved.
 
 ##### Run specs:
 - `make lint`

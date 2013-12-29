@@ -44,8 +44,6 @@ exports.Communicator = class Communicator
 
     unlock: (unlock_codes) ->
       if @isLocked()
-        # TODO: explode if the plugin is locked for now...
-        # debugger
         return true
 
     devices: =>

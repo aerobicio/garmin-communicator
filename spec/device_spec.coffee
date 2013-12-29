@@ -37,6 +37,21 @@ describe 'Device', ->
   it 'sets the device software version', ->
     expect(@device.softwareVersion).to.equal "300"
 
+  describe '#activities', ->
+    describe 'the device can read FIT activities', ->
+      it 'reads FIT activities', ->
+        @device.canReadFITActivities = true
+        @device.readFITActivities = sinon.stub()
+        @device.activities()
+        chai.expect(@device.readFITActivities.calledOnce).to.be.true
+
+    describe 'the device cannot read FIT activities', ->
+      it 'reads TCX activities', ->
+        @device.canReadFITActivities = false
+        @device.readActivities = sinon.stub()
+        @device.activities()
+        chai.expect(@device.readActivities.calledOnce).to.be.true
+
   describe 'Capabilities', ->
     beforeEach ->
       @_setDeviceInfoStub = sinon.stub(Device.prototype, '_setDeviceInfo')
