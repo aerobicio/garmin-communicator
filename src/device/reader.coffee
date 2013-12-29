@@ -2,6 +2,7 @@
 {Accessor}     = require('./accessor')
 {XMLParser}    = require('../utils/xmlparser')
 {FitFile}      = require('../../src/fitfile')
+{TcxFile}      = require('../../src/tcxfile')
 
 exports.Reader = class Reader extends Accessor
   "use strict"
@@ -28,12 +29,16 @@ exports.Reader = class Reader extends Accessor
 
   _onFinished: (deferred) ->
     deferred.notify(percent: 100)
-    deferred.resolve(@_loadDataFromDirectory())
+    deferred.resolve(@_loadData())
 
-  _loadDataFromDirectory: ->
+  _loadData: ->
     switch @pluginMethod
-      when 'FitnessDirectory' then @communicator.read("TcdXml")
+      when 'FitnessDirectory' then @_parseTcdXml()
       when 'FITDirectory'     then @_parseFitDirectory()
+
+  _parseTcdXml: ->
+    xml = @communicator.read("TcdXml")
+    new TcxFile(xml)
 
   _parseFitDirectory: ->
     xml = XMLParser.parse(@_getFitDirectoryXml())
@@ -63,6 +68,7 @@ exports.Reader = class Reader extends Accessor
       .textContent
 
   _getDateObjectForFile: (fileXml) ->
+    console.log fileXml.getElementsByTagName("CreationTime")[0].textContent
     # http://stackoverflow.com/questions/14238261/convert-yyyy-mm-ddthhmmss-fffz-to-datetime-in-javascript-manually
     @REPLACE_DATE_DASHES_REGEX ||= /-/g
     @REPLACE_DATE_TZ_REGEX     ||= /[TZ]/g

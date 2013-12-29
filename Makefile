@@ -1,7 +1,6 @@
 COMPILE         = ./compile
 SRC             = ./src
 SPEC            = ./spec
-DIST            = ./dist
 BIN             = node_modules/.bin
 ISTANBUL        = ./node_modules/istanbul/lib/cli.js
 MOCHA           = ./node_modules/mocha/bin/_mocha
@@ -22,15 +21,14 @@ clean:
 dist: compile browserify uglify
 
 browserify:
-	mkdir -p $(DIST)
-	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile $(DIST)/garmin.js
+	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile garmin.js
 
 browserify_specs:
 	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js --outfile $(COMPILE)/spec/index.js
 
 # uglify built code
 uglify:
-	$(UGLIFYJS) $(DIST)/garmin.js --stats -o $(DIST)/garmin.min.js
+	$(UGLIFYJS) garmin.js --stats -o garmin.min.js
 
 # combine compiled code for production
 compile:
