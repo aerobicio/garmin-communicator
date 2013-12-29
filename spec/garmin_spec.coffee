@@ -5,7 +5,7 @@
 describe "Garmin", ->
   beforeEach ->
     @_checkIsInstalledStub = sinon.stub(Plugin.prototype, '_checkIsInstalled')
-    @garmin = new window.Garmin(unlock_codes: @unlockCodes)
+    @garmin = new window.Garmin(unlockCodes: @unlockCodes)
 
   afterEach ->
     Communicator.destroy()
@@ -18,7 +18,7 @@ describe "Garmin", ->
 
     it "returns the default unlock codes merged with ones passed in", ->
       unlockCode = "https://aerobic.io": "velciraptors-are-awesome"
-      garmin = new window.Garmin(unlock_codes: unlockCode)
+      garmin = new window.Garmin(unlockCodes: unlockCode)
       chai.expect(garmin.mergeUnlockCodes()).to.have.keys([
         "file:///",
         "http://localhost",

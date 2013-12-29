@@ -68,10 +68,11 @@
 
       PrivateCommunicator.prototype.unlock = function(unlock_codes) {
         var _this = this;
-        return _(unlock_codes).map(function(unlockKey, domain) {
-          console.log(domain, unlockKey);
-          return console.log(_this.invoke('Unlock', domain, unlockKey));
-        });
+        if (this.isLocked()) {
+          return _(unlock_codes).map(function(unlockKey, domain) {
+            return _this.invoke('Unlock', domain, unlockKey);
+          });
+        }
       };
 
       PrivateCommunicator.prototype.devices = function() {
@@ -593,7 +594,6 @@
     };
 
     Garmin.prototype.unlock = function() {
-      console.log('unlock', this.options.unlock_codes);
       return this.communicator.unlock(this.options.unlock_codes);
     };
 

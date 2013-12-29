@@ -66,11 +66,10 @@ describe 'Communicator', ->
     describe 'unlocking the plugin', ->
       beforeEach ->
         @communicator.pluginProxy.Locked = true
+        console.log @communicator
 
       it 'returns true when it unlocks the plugin successfully', ->
         expect(@communicator.unlock()).to.equal true
-
-      xit 'throws an exception if the plugin fails to unlock'
 
   describe '#devices', ->
     beforeEach ->

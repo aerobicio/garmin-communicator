@@ -11,14 +11,15 @@ window.Garmin = class Garmin
   constructor: (options = {}) ->
     @communicator = Communicator.get()
     @options = _(options).defaults
-      unlock_codes: @mergeUnlockCodes(options.unlock_codes)
+      unlockCodes: @mergeUnlockCodes(options.unlockCodes)
+
     @unlock()
 
   mergeUnlockCodes: (unlockCodes = {}) ->
     _(@DEFAULT_UNLOCK_CODES).defaults(unlockCodes)
 
   unlock: ->
-    @communicator.unlock(@options.unlock_codes)
+    @communicator.unlock(@options.unlockCodes)
 
   devices: ->
     @communicator.devices()
