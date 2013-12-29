@@ -44,15 +44,15 @@ describe 'TcxWorkoutFactory', ->
       tcxFiles = @class.produce(@data)
       expect(tcxFiles.length).to.equal 2
       expect(tcxFiles[0].id).to.equal "2013-12-25T08:35:56Z"
-      expect(tcxFiles[0].date.toString()).to.equal new Date("Wed Dec 25 2013 08:35:56 GMT+1100 (EST)").toString()
+      expect(tcxFiles[0].date.toString()).to.equal new Date("Wed Dec 25 2013 08:35:56").toString()
       expect(tcxFiles[1].id).to.equal "2013-12-15T07:12:31Z"
-      expect(tcxFiles[1].date.toString()).to.equal new Date("Sun Dec 15 2013 07:12:31 GMT+1100 (EST)").toString()
+      expect(tcxFiles[1].date.toString()).to.equal new Date("Sun Dec 15 2013 07:12:31").toString()
 
   describe "#_getFirstLapStartTime", ->
     it "returns the creation time as a date object", ->
       @_getFirstLapStartTimeSpy = sinon.spy(@class, '_getFirstLapStartTime')
       @class.produce(@data)
-      date = new Date("Wed Dec 25 2013 08:35:56 GMT+1100 (EST)").toString()
+      date = new Date("Wed Dec 25 2013 08:35:56").toString()
       expect(@_getFirstLapStartTimeSpy.returnValues[0].toString()).to.include date
       @_getFirstLapStartTimeSpy.restore()
 
