@@ -9,23 +9,19 @@ window.Garmin = class Garmin
     "http://127.0.0.1": "40cd4860f7988c53b15b8491693de133"
 
   constructor: (options = {}) ->
-    @options = _(options).defaults
+    @configuration = _(options).defaults
       unlockCodes: @mergeUnlockCodes(options.unlockCodes)
       testMode: false
 
-    # move to config object
-    configuration =
-      testMode: @options.testMode
-
-    @communicator = Communicator.get(configuration)
+    @communicator = Communicator.get(@configuration)
     @unlock()
 
   mergeUnlockCodes: (unlockCodes = {}) ->
     _(@DEFAULT_UNLOCK_CODES).defaults(unlockCodes)
 
   unlock: ->
-    unless @options.testMode
-      @communicator.unlock(@options.unlockCodes)
+    unless @configuration.testMode
+      @communicator.unlock(@configuration.unlockCodes)
 
   devices: ->
     @communicator.devices()

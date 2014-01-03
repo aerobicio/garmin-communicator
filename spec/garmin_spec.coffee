@@ -4,12 +4,11 @@
 
 describe "Garmin", ->
   beforeEach ->
-    @_checkIsInstalledStub = sinon.stub(Plugin.prototype, '_checkIsInstalled')
-    @garmin = new window.Garmin(unlockCodes: @unlockCodes)
+    @checkIsInstalledStub = sinon.stub(Plugin.prototype, 'checkIsInstalled')
 
   afterEach ->
     Communicator.destroy()
-    @_checkIsInstalledStub.restore()
+    @checkIsInstalledStub.restore()
 
   describe "#mergeUnlockCodes", ->
     it "returns the default unlock codes if none were passed in", ->

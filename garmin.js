@@ -15,7 +15,7 @@
 
     function Communicator() {}
 
-    _configuration = {};
+    _configuration = null;
 
     _instance = null;
 
@@ -34,7 +34,9 @@
     PrivateCommunicator = (function() {
       function PrivateCommunicator(configuration) {
         this.devices = __bind(this.devices, this);
-        this.plugin = new Plugin(configuration);
+        this.configuration = configuration;
+        console.log(this.configuration);
+        this.plugin = new Plugin(this.configuration);
         this.pluginProxy = this.plugin.el;
       }
 
@@ -501,18 +503,15 @@
     };
 
     function Garmin(options) {
-      var configuration;
       if (options == null) {
         options = {};
       }
-      this.options = _(options).defaults({
+      this.configuration = _(options).defaults({
         unlockCodes: this.mergeUnlockCodes(options.unlockCodes),
         testMode: false
       });
-      configuration = {
-        testMode: this.options.testMode
-      };
-      this.communicator = Communicator.get(configuration);
+      console.log(this.configuration);
+      this.communicator = Communicator.get(this.configuration);
       this.unlock();
     }
 
@@ -551,13 +550,13 @@
   exports.Plugin = Plugin = (function() {
     "use strict";
     function Plugin(configuration) {
-      var _ref;
       if (configuration == null) {
         configuration = {};
       }
       this.configuration = configuration;
+      console.log(this.configuration);
       this.el || (this.el = this._createPluginEl());
-      if (!((_ref = this.configuration) != null ? _ref.testMode : void 0)) {
+      if (!this.configuration.testMode) {
         this._checkIsInstalled();
       }
     }

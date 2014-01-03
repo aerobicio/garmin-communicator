@@ -4,10 +4,10 @@
 
 describe 'Communicator', ->
   beforeEach ->
-    @_checkIsInstalledStub = sinon.stub(Plugin.prototype, '_checkIsInstalled')
+    @checkIsInstalledStub = sinon.stub(Plugin.prototype, 'checkIsInstalled')
 
   afterEach ->
-    @_checkIsInstalledStub.restore()
+    @checkIsInstalledStub.restore()
 
   describe '#invoke', ->
     beforeEach ->
