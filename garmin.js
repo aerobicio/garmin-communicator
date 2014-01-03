@@ -35,7 +35,6 @@
       function PrivateCommunicator(configuration) {
         this.devices = __bind(this.devices, this);
         this.configuration = configuration;
-        console.log(this.configuration);
         this.plugin = new Plugin(this.configuration);
         this.pluginProxy = this.plugin.el;
       }
@@ -510,7 +509,6 @@
         unlockCodes: this.mergeUnlockCodes(options.unlockCodes),
         testMode: false
       });
-      console.log(this.configuration);
       this.communicator = Communicator.get(this.configuration);
       this.unlock();
     }
@@ -523,8 +521,8 @@
     };
 
     Garmin.prototype.unlock = function() {
-      if (!this.options.testMode) {
-        return this.communicator.unlock(this.options.unlockCodes);
+      if (!this.configuration.testMode) {
+        return this.communicator.unlock(this.configuration.unlockCodes);
       }
     };
 
@@ -554,10 +552,9 @@
         configuration = {};
       }
       this.configuration = configuration;
-      console.log(this.configuration);
       this.el || (this.el = this._createPluginEl());
       if (!this.configuration.testMode) {
-        this._checkIsInstalled();
+        this.checkIsInstalled();
       }
     }
 
@@ -573,7 +570,7 @@
       }
     };
 
-    Plugin.prototype._checkIsInstalled = function() {
+    Plugin.prototype.checkIsInstalled = function() {
       if (this.el.Unlock == null) {
         throw new Error("Garmin Communicator plugin not installed");
       }
