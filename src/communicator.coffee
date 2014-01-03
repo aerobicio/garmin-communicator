@@ -4,7 +4,7 @@
 exports.Communicator = class Communicator
   "use strict"
 
-  _configuration = {}
+  _configuration = null
   _instance = null
 
   @get: (configuration = {}) ->
@@ -16,8 +16,9 @@ exports.Communicator = class Communicator
 
   class PrivateCommunicator
     constructor: (configuration) ->
-      @plugin      = new Plugin(configuration)
-      @pluginProxy = @plugin.el
+      @configuration = configuration
+      @plugin        = new Plugin(@configuration)
+      @pluginProxy   = @plugin.el
 
     invoke: (name, args...) ->
       fn = @pluginProxy[name]
