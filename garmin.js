@@ -11,24 +11,30 @@
 
   exports.Communicator = Communicator = (function() {
     "use strict";
-    var PrivateCommunicator, instance;
+    var PrivateCommunicator, _configuration, _instance;
 
     function Communicator() {}
 
-    instance = null;
+    _configuration = {};
 
-    Communicator.get = function() {
-      return instance || (instance = new PrivateCommunicator());
+    _instance = null;
+
+    Communicator.get = function(configuration) {
+      if (configuration == null) {
+        configuration = {};
+      }
+      _configuration || (_configuration = configuration);
+      return _instance || (_instance = new PrivateCommunicator(_configuration));
     };
 
     Communicator.destroy = function() {
-      return instance = null;
+      return _instance = null;
     };
 
     PrivateCommunicator = (function() {
-      function PrivateCommunicator() {
+      function PrivateCommunicator(configuration) {
         this.devices = __bind(this.devices, this);
-        this.plugin = new Plugin();
+        this.plugin = new Plugin(configuration);
         this.pluginProxy = this.plugin.el;
       }
 
@@ -117,7 +123,7 @@
         return _(xml.getElementsByTagName("Device")).map(function(device) {
           var name, number;
           name = device.getAttribute("DisplayName");
-          number = parseInt(device.getAttribute("Number"), 0);
+          number = parseInt(device.getAttribute("Number"), 10);
           return new Device(number, name);
         });
       };
@@ -351,7 +357,7 @@
       var _this = this;
       return setTimeout((function() {
         return _this._checkFinished(deferred);
-      }), 500);
+      }), 150);
     };
 
     Accessor.prototype._onIdle = function(deferred) {
@@ -495,13 +501,18 @@
     };
 
     function Garmin(options) {
+      var configuration;
       if (options == null) {
         options = {};
       }
-      this.communicator = Communicator.get();
       this.options = _(options).defaults({
-        unlockCodes: this.mergeUnlockCodes(options.unlockCodes)
+        unlockCodes: this.mergeUnlockCodes(options.unlockCodes),
+        testMode: false
       });
+      configuration = {
+        testMode: this.options.testMode
+      };
+      this.communicator = Communicator.get(configuration);
       this.unlock();
     }
 
@@ -513,7 +524,9 @@
     };
 
     Garmin.prototype.unlock = function() {
-      return this.communicator.unlock(this.options.unlockCodes);
+      if (!this.options.testMode) {
+        return this.communicator.unlock(this.options.unlockCodes);
+      }
     };
 
     Garmin.prototype.devices = function() {
@@ -537,9 +550,16 @@
 
   exports.Plugin = Plugin = (function() {
     "use strict";
-    function Plugin() {
+    function Plugin(configuration) {
+      var _ref;
+      if (configuration == null) {
+        configuration = {};
+      }
+      this.configuration = configuration;
       this.el || (this.el = this._createPluginEl());
-      this._checkIsInstalled();
+      if (!((_ref = this.configuration) != null ? _ref.testMode : void 0)) {
+        this._checkIsInstalled();
+      }
     }
 
     Plugin.prototype.softwareVersion = function() {
@@ -754,11 +774,11 @@
     };
 
     FitWorkoutFactory.prototype._getIdForFileNode = function(fileXml) {
-      return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("Id")[0].textContent);
+      return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("Id")[0].textContent, 10);
     };
 
     FitWorkoutFactory.prototype._getFileTypeForFileNode = function(fileXml) {
-      return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("FileType")[0].textContent);
+      return parseInt(fileXml.getElementsByTagName("FitId")[0].getElementsByTagName("FileType")[0].textContent, 10);
     };
 
     FitWorkoutFactory.prototype._getPathForFileNode = function(file) {

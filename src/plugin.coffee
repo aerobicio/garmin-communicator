@@ -1,10 +1,11 @@
 exports.Plugin = class Plugin
   "use strict"
 
-  constructor: ->
+  constructor: (configuration = {}) ->
+    @configuration = configuration
     @el or= @_createPluginEl()
 
-    @_checkIsInstalled()
+    @_checkIsInstalled() unless @configuration?.testMode
 
   softwareVersion: ->
     @el.getPluginVersion()

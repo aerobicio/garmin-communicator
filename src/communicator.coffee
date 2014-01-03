@@ -4,17 +4,19 @@
 exports.Communicator = class Communicator
   "use strict"
 
-  instance = null
+  _configuration = {}
+  _instance = null
 
-  @get: ->
-    instance or= new PrivateCommunicator()
+  @get: (configuration = {}) ->
+    _configuration or= configuration
+    _instance or= new PrivateCommunicator(_configuration)
 
   @destroy: ->
-    instance = null
+    _instance = null
 
   class PrivateCommunicator
-    constructor: ->
-      @plugin      = new Plugin()
+    constructor: (configuration) ->
+      @plugin      = new Plugin(configuration)
       @pluginProxy = @plugin.el
 
     invoke: (name, args...) ->
@@ -73,5 +75,5 @@ exports.Communicator = class Communicator
       xml = XMLParser.parse(@invoke('DevicesXmlString'))
       _(xml.getElementsByTagName("Device")).map (device) =>
         name   = device.getAttribute("DisplayName")
-        number = parseInt(device.getAttribute("Number"), 0)
+        number = parseInt(device.getAttribute("Number"), 10)
         new Device(number, name)

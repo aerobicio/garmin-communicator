@@ -44,7 +44,7 @@ exports.Accessor = class Accessor
     setTimeout (=> @_checkFinished(deferred)), 100
 
   _onWaiting: (deferred) ->
-    setTimeout (=> @_checkFinished(deferred)), 500
+    setTimeout (=> @_checkFinished(deferred)), 150
 
   _onIdle: (deferred) ->
     deferred.reject()

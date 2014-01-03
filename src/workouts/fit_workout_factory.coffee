@@ -30,16 +30,18 @@ exports.FitWorkoutFactory = class FitWorkoutFactory extends WorkoutFactory
     @_getFileTypeForFileNode(file) is @FITFILE_TYPES.activities
 
   _getIdForFileNode: (fileXml) ->
-    parseInt fileXml
+    parseInt(fileXml
       .getElementsByTagName("FitId")[0]
       .getElementsByTagName("Id")[0]
       .textContent
+    , 10)
 
   _getFileTypeForFileNode: (fileXml) ->
-    parseInt fileXml
+    parseInt(fileXml
       .getElementsByTagName("FitId")[0]
       .getElementsByTagName("FileType")[0]
       .textContent
+    , 10)
 
   _getPathForFileNode: (file) ->
     file.getAttribute("Path")
