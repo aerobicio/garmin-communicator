@@ -3,9 +3,10 @@ exports.Plugin = class Plugin
 
   constructor: (configuration = {}) ->
     @configuration = configuration
+    console.log @configuration
     @el or= @_createPluginEl()
 
-    @_checkIsInstalled() unless @configuration?.testMode
+    # @_checkIsInstalled() unless @configuration?.testMode
 
   softwareVersion: ->
     @el.getPluginVersion()
