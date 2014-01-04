@@ -15,10 +15,13 @@ exports.Communicator = class Communicator
     _instance = null
 
   class PrivateCommunicator
+    pluginIsInstalled: null
+
     constructor: (configuration) ->
-      @configuration = configuration
-      @plugin        = new Plugin(@configuration)
-      @pluginProxy   = @plugin.el
+      @configuration     = configuration
+      @plugin            = new Plugin
+      @pluginProxy       = @plugin.el
+      @pluginIsInstalled = @plugin.pluginIsInstalled()
 
     invoke: (name, args...) ->
       fn = @pluginProxy[name]

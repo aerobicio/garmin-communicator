@@ -19,6 +19,9 @@ window.Garmin = class Garmin
   mergeUnlockCodes: (unlockCodes = {}) ->
     _(@DEFAULT_UNLOCK_CODES).defaults(unlockCodes)
 
+  isInstalled: ->
+    @communicator.pluginIsInstalled
+
   unlock: ->
     unless @configuration.testMode
       @communicator.unlock(@configuration.unlockCodes)

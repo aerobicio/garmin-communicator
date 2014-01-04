@@ -6,7 +6,7 @@
 
 describe 'Reader', ->
   beforeEach ->
-    @checkIsInstalledStub = sinon.stub(Plugin.prototype, 'checkIsInstalled')
+    @pluginIsInstalledStub = sinon.stub(Plugin.prototype, 'pluginIsInstalled')
     @device = {number: 0}
     @dataType = 'test'
     @pluginMethod = 'Foo'
@@ -18,7 +18,7 @@ describe 'Reader', ->
     }
 
   afterEach ->
-    @checkIsInstalledStub.restore()
+    @pluginIsInstalledStub.restore()
     @invokeStub.restore()
     Communicator.destroy()
 

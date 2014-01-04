@@ -1,11 +1,8 @@
 exports.Plugin = class Plugin
   "use strict"
 
-  constructor: (configuration = {}) ->
-    @configuration = configuration
+  constructor: ->
     @el or= @_createPluginEl()
-
-    @checkIsInstalled() unless @configuration.testMode
 
   softwareVersion: ->
     @el.getPluginVersion()
@@ -16,9 +13,8 @@ exports.Plugin = class Plugin
     else
       @_createVanillaPlugin()
 
-  checkIsInstalled: ->
-    unless @el.Unlock?
-      throw new Error("Garmin Communicator plugin not installed")
+  pluginIsInstalled: ->
+    if @el.Unlock? then true else false
 
   _smellsLikeIE: ->
     window.ActiveXObject?

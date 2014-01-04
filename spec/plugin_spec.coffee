@@ -4,11 +4,11 @@
 describe 'Plugin', ->
   describe 'Add the plugin element to the DOM', ->
     beforeEach ->
-      @checkIsInstalled = sinon.stub(Plugin.prototype, 'checkIsInstalled')
+      @pluginIsInstalledSpy = sinon.spy(Plugin.prototype, 'pluginIsInstalled')
 
     afterEach ->
       $("#GarminNetscapePlugin, #GarminActiveXControl, div:empty").remove()
-      @checkIsInstalled.restore()
+      @pluginIsInstalledSpy.restore()
 
     describe 'in a modern browser', ->
       beforeEach ->
@@ -32,17 +32,23 @@ describe 'Plugin', ->
       it 'creates a communicator object for a garbage browser', ->
         expect(@class.el.id).to.equal "GarminActiveXControl"
 
-  describe '#checkIsInstalled', ->
+  describe '#pluginIsInstalled', ->
     beforeEach ->
-      @checkIsInstalledSpy = sinon.spy(Plugin.prototype, 'checkIsInstalled')
+      @pluginIsInstalledSpy = sinon.spy(Plugin.prototype, 'pluginIsInstalled')
+      @plugin = new Plugin
 
     afterEach ->
-      @checkIsInstalledSpy.restore()
+      Communicator.destroy()
+      @pluginIsInstalledSpy.restore()
 
     it 'checks that the plugin is installed', ->
-      sinon.stub(Plugin.prototype, '_createPluginEl').returns { Unlock: -> true }
-      Communicator.get(testMode: false)
-      expect(@checkIsInstalledSpy.calledOnce).to.equal true
+      Communicator.get()
+      expect(@pluginIsInstalledSpy.calledOnce).to.equal true
 
-    it 'throws an error if the plugin is not installed', ->
-      expect(=> Communicator.get(testMode: false)).to.throw. Error
+    it 'returns true if the plugin is installed', ->
+      @plugin.el.Unlock = -> true
+      Communicator.get()
+      expect(@plugin.pluginIsInstalled()).to.be.true
+
+    it 'returns false if the plugin is not installed', ->
+      expect(@plugin.pluginIsInstalled()).to.be.false

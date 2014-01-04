@@ -5,7 +5,7 @@
 
 describe 'Device', ->
   beforeEach ->
-    @checkIsInstalledStub = sinon.stub(Plugin.prototype, 'checkIsInstalled')
+    @pluginIsInstalledStub = sinon.stub(Plugin.prototype, 'pluginIsInstalled')
     @communicator = Communicator.get()
     @invokeStub = sinon.stub(@communicator, 'invoke')
     @communicator.invoke.withArgs('DeviceDescription', 0).returns """
@@ -22,7 +22,7 @@ describe 'Device', ->
     @device = new Device(0, '')
 
   afterEach ->
-    @checkIsInstalledStub.restore()
+    @pluginIsInstalledStub.restore()
     @invokeStub.restore()
     @communicator = Communicator.destroy()
 
