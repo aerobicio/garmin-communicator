@@ -513,7 +513,6 @@
         testMode: false
       });
       this.communicator = Communicator.get(this.configuration);
-      this.isInstalled = this.communicator.pluginIsInstalled;
       this.unlock();
     }
 
@@ -522,6 +521,10 @@
         unlockCodes = {};
       }
       return _(this.DEFAULT_UNLOCK_CODES).defaults(unlockCodes);
+    };
+
+    Garmin.prototype.isInstalled = function() {
+      return this.isInstalled = this.communicator.pluginIsInstalled || this.configuration.testMode;
     };
 
     Garmin.prototype.unlock = function() {

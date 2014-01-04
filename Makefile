@@ -42,7 +42,7 @@ lint:
 # run the test suite
 spec: lint compile browserify_specs
 	$(ISTANBUL) cover -x "**/spec/**" ./node_modules/mocha/bin/_mocha -- --growl --ui bdd --require $(SPEC)/spec_helper.js --reporter spec "$(COMPILE)/spec/**/*_spec.js"
-	$(ISTANBUL) check-coverage --statements 90 --branches 73 --functions 87 --lines 91
+	$(ISTANBUL) check-coverage --statements 90 --branches 72 --functions 87 --lines 91
 
 coverage_report:
 	$(ISTANBUL) report
