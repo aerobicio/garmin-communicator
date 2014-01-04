@@ -38,8 +38,8 @@
         this.devices = __bind(this.devices, this);
         this.configuration = configuration;
         this.plugin = new Plugin;
-        this.pluginProxy = this.plugin.el;
         this.pluginIsInstalled = this.plugin.pluginIsInstalled();
+        this.pluginProxy = this.plugin.el;
       }
 
       PrivateCommunicator.prototype.invoke = function() {
@@ -513,6 +513,7 @@
         testMode: false
       });
       this.communicator = Communicator.get(this.configuration);
+      this.isInstalled = this.communicator.pluginIsInstalled;
       this.unlock();
     }
 
@@ -521,10 +522,6 @@
         unlockCodes = {};
       }
       return _(this.DEFAULT_UNLOCK_CODES).defaults(unlockCodes);
-    };
-
-    Garmin.prototype.isInstalled = function() {
-      return this.communicator.pluginIsInstalled;
     };
 
     Garmin.prototype.unlock = function() {

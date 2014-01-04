@@ -20,8 +20,8 @@ exports.Communicator = class Communicator
     constructor: (configuration) ->
       @configuration     = configuration
       @plugin            = new Plugin
-      @pluginProxy       = @plugin.el
       @pluginIsInstalled = @plugin.pluginIsInstalled()
+      @pluginProxy       = @plugin.el
 
     invoke: (name, args...) ->
       fn = @pluginProxy[name]
