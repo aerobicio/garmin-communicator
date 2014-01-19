@@ -28,7 +28,7 @@
     };
 
     Communicator.destroy = function() {
-      return _instance = null;
+      _instance = null;
     };
 
     PrivateCommunicator = (function() {
