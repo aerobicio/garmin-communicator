@@ -37,7 +37,7 @@ compile:
 
 # run coffeelint over the source code
 lint:
-	$(COFFEELINT) -r src
+	$(COFFEELINT) -f coffeelint.json -r src
 
 # run the test suite
 spec: lint compile browserify_specs

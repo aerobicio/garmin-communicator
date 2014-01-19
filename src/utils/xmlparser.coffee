@@ -5,7 +5,7 @@ exports.XMLParser = class XMLParser
     @_getParser() unless @_parser?
 
     unless typeof xml is "string"
-      throw new Error "XML is not a string!"
+      throw new Error("XML is not a string!")
 
     @_parser(xml)
 
@@ -15,7 +15,7 @@ exports.XMLParser = class XMLParser
     else if @_xmlDomAvailable()
       @_xmlDomParser
     else
-      throw new Error "No XML parser found, can't parse XML"
+      throw new Error("No XML parser found, can't parse XML")
 
   @_domParserAvailable: ->
     window.DOMParser?
