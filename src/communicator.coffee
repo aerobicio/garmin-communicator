@@ -7,8 +7,8 @@ exports.Communicator = class Communicator
   _configuration = null
   _instance = null
 
-  @get: (configuration = {}) ->
-    _configuration ||= configuration
+  @get: (configuration) ->
+    _configuration = configuration if configuration
     _instance ||= new PrivateCommunicator(_configuration)
 
   @destroy: ->
@@ -35,10 +35,15 @@ exports.Communicator = class Communicator
     write: (name, data) ->
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name] = data
+        true
+      else
+        false
 
     read: (name) ->
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name]
+      else
+        false
 
     busy: (value) ->
       @_busy = value if value?

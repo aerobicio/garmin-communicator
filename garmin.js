@@ -20,10 +20,9 @@
     _instance = null;
 
     Communicator.get = function(configuration) {
-      if (configuration == null) {
-        configuration = {};
+      if (configuration) {
+        _configuration = configuration;
       }
-      _configuration || (_configuration = configuration);
       return _instance || (_instance = new PrivateCommunicator(_configuration));
     };
 
@@ -55,13 +54,18 @@
 
       PrivateCommunicator.prototype.write = function(name, data) {
         if (this.pluginProxy.hasOwnProperty(name)) {
-          return this.pluginProxy[name] = data;
+          this.pluginProxy[name] = data;
+          return true;
+        } else {
+          return false;
         }
       };
 
       PrivateCommunicator.prototype.read = function(name) {
         if (this.pluginProxy.hasOwnProperty(name)) {
           return this.pluginProxy[name];
+        } else {
+          return false;
         }
       };
 

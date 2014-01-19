@@ -62,6 +62,7 @@ exports.Accessor = class Accessor
         progress.percent = parseInt(node.textContent, 10)
       else
         progress.content.push(node.textContent)
+      node
     progress
 
   _getProgressXml: ->
