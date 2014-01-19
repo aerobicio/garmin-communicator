@@ -20,7 +20,8 @@
     "sinon": "~1.7.3",
     "uglifyify": "~1.1.0",
     "xmldom": "~0.1.16",
-    "jshint": "~2.4.1"
+    "jshint": "~2.4.1",
+    "coveralls": "~2.6.1"
   },
   "scripts": {
     "lint": "make lint",
