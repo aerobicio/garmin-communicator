@@ -18,17 +18,14 @@ clean:
 	rm -f $(COMPILE)/{spec,src}/*.js $(COMPILE)/{spec,src}/*.map
 
 # build dist targets
-dist: compile browserify uglify
+dist: compile browserify
 
 browserify:
 	$(BROWSERIFY) $(COMPILE)/src/garmin.js --outfile garmin.js
+	$(BROWSERIFY) -t uglifyify $(COMPILE)/src/garmin.js --outfile garmin.min.js
 
 browserify_specs:
 	$(BROWSERIFY) $(COMPILE)/spec/*_spec.js $(COMPILE)/spec/device/*_spec.js $(COMPILE)/spec/utils/*_spec.js $(COMPILE)/spec/workouts/*_spec.js --outfile $(COMPILE)/spec/index.js
-
-# uglify built code
-uglify:
-	$(UGLIFYJS) garmin.js --stats -o garmin.min.js
 
 # combine compiled code for production
 compile:
@@ -37,7 +34,7 @@ compile:
 
 # run coffeelint over the source code
 lint:
-	$(COFFEELINT) -r src
+	$(COFFEELINT) -f coffeelint.json -r src
 
 # run the test suite
 spec: lint compile browserify_specs

@@ -28,7 +28,7 @@
     };
 
     Communicator.destroy = function() {
-      return _instance = null;
+      _instance = null;
     };
 
     PrivateCommunicator = (function() {
@@ -37,7 +37,7 @@
       function PrivateCommunicator(configuration) {
         this.devices = __bind(this.devices, this);
         this.configuration = configuration;
-        this.plugin = new Plugin;
+        this.plugin = new Plugin();
         this.pluginIsInstalled = this.plugin.pluginIsInstalled();
         this.pluginProxy = this.plugin.el;
       }

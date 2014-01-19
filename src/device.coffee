@@ -48,7 +48,7 @@ exports.Device = class Device
       reader.perform()
 
   _writer: ->
-    -> throw new Error "Not implemented"
+    -> throw new Error("Not implemented")
 
   _canXY: (method, dataTypeName) ->
     transferDirection = @_getDataTypeNodeForDataTypeName(dataTypeName)

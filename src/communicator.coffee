@@ -8,18 +8,19 @@ exports.Communicator = class Communicator
   _instance = null
 
   @get: (configuration = {}) ->
-    _configuration or= configuration
-    _instance or= new PrivateCommunicator(_configuration)
+    _configuration ||= configuration
+    _instance ||= new PrivateCommunicator(_configuration)
 
   @destroy: ->
     _instance = null
+    return
 
   class PrivateCommunicator
     pluginIsInstalled: null
 
     constructor: (configuration) ->
       @configuration     = configuration
-      @plugin            = new Plugin
+      @plugin            = new Plugin()
       @pluginIsInstalled = @plugin.pluginIsInstalled()
       @pluginProxy       = @plugin.el
 
