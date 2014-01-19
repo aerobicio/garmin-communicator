@@ -1,4 +1,7 @@
-# Garmin Communicator [![wercker status](https://app.wercker.com/status/ff202c4e0f75411cda393cbc59e651b9 "wercker status")](https://app.wercker.com/project/bykey/ff202c4e0f75411cda393cbc59e651b9)
+# Garmin Communicator
+
+[![wercker status](https://app.wercker.com/status/b1a5d9088c0a82f7e9dfe9cdbe4f660b/m "wercker status")](https://app.wercker.com/project/bykey/b1a5d9088c0a82f7e9dfe9cdbe4f660b)
+
 
 ## A (more) sane re-write of the Garmin Device Connect JS library.
 
