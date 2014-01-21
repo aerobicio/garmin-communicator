@@ -10,6 +10,7 @@ istanbul = require('gulp-istanbul')
 clean = require('gulp-clean')
 git = require('gulp-git')
 size = require('gulp-size')
+sloc = require('gulp-sloc')
 child_process = require('child_process')
 es = require('event-stream')
 webpack = require('webpack')
@@ -79,9 +80,22 @@ gulp.task 'spec', ['compile'], ->
   stream
 
 gulp.task 'check-coverage', ->
-  gulp.src('./.coverage.json')
-    .pipe(exec('istanbul check-coverage <%= file.path %>'))
+  options =
+    silent: true
+    coverage: require('./.coverage.json')
 
+  onCoverageError = (errors) ->
+    errors
+      .toString()
+      .split("\n")
+      .filter((line) -> !line.indexOf("ERROR:"))
+      .forEach (error) ->
+        gutil.log(gutil.colors.red(error))
+
+  stream = gulp.src('./')
+    .pipe(exec('istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
+    .on('error', onCoverageError)
+  stream
 
 gulp.task 'clean', ->
   stream = gulp.src('./compile', read: false)
@@ -98,9 +112,12 @@ gulp.task 'compile', ['lint'], ->
       .pipe(gulp.dest('./compile/spec'))
   )
 
-gulp.task 'stats', ->
+gulp.task 'size', ->
   gulp.src('build/*.js')
     .pipe(size(showFiles: true))
-    .pipe(gulp.dest('build'))
+
+gulp.task 'sloc', ->
+  gulp.src('./src/**/*.coffee')
+    .pipe(sloc())
 
 gulp.task 'default', ['spec']
