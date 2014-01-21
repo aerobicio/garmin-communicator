@@ -1,4 +1,4 @@
-{Communicator} = require('../../src/communicator')
+{Communicator} = require('../communicator')
 
 exports.FitWorkout = class FitWorkout
   "use strict"

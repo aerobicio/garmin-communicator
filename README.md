@@ -8,7 +8,7 @@
 
 ### Requirements
 
-- `underscore` (http://underscorejs.org)
+- `lodash` (http://lodash.com)
 - `q` (https://github.com/kriskowal/q)
 
 ### Developing

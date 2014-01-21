@@ -10,7 +10,7 @@ window.DOMParser = require('xmldom').DOMParser;
 
 // Test requirements
 Q         = require('q');
-_         = require('underscore');
+_         = require('lodash/dist/lodash.underscore');
 sinon     = require('sinon');
 chai      = require('chai');
 expect    = chai.expect;

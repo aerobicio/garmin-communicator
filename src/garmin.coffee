@@ -1,4 +1,4 @@
-{Communicator} = require('../src/communicator')
+{Communicator} = require('./communicator')
 
 window.Garmin = class Garmin
   "use strict"

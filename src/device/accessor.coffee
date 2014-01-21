@@ -1,4 +1,4 @@
-{Communicator} = require('../../src/communicator')
+{Communicator} = require('../communicator')
 {XMLParser}    = require('../utils/xmlparser')
 
 exports.Accessor = class Accessor

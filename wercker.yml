@@ -3,19 +3,14 @@ build:
   steps:
     - wercker/npm-install@0.9.3
     - script:
-        name: Spec
-        code: make spec
+        name: Specs
+        code: gulp spec
     - script:
-        name: Coverage report
-        code: make coverage_report
-    - script:
-        name: Build distribution
-        code: |
-          make dist
+        name: Build
+        code: gulp build
   after-steps:
     - script:
         name: Save Artifacts
         code: |
-          cp -R garmin.js $WERCKER_REPORT_ARTIFACTS_DIR
-          cp -R garmin.min.js $WERCKER_REPORT_ARTIFACTS_DIR
+          cp -R build $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
