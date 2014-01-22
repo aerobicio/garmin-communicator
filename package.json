@@ -41,11 +41,13 @@
     "gulp-exec": "~1.0.4",
     "gulp-size": "~0.1.2",
     "gulp-browserify": "~0.3.3",
-    "gulp-sloc": "~1.0.2"
+    "gulp-sloc": "~1.0.2",
+    "gulp-rename": "~0.2.2"
   },
   "scripts": {
-    "lint": "gulp lint",
-    "spec": "gulp spec"
+    "spec": "gulp spec",
+    "check-coverage": "istanbul check-coverage --statements 90 --branches 72 --functions 87 --lines 91",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",

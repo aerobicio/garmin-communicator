@@ -11,23 +11,31 @@ clean = require('gulp-clean')
 git = require('gulp-git')
 size = require('gulp-size')
 sloc = require('gulp-sloc')
+uglify = require('gulp-uglify')
+rename = require("gulp-rename")
 es = require('event-stream')
 webpack = require('webpack')
 webpackConfig = require('./webpack.config')
 specHelper = require('./spec/spec_helper.js')
 
-gulp.task 'build', ['compile'], (callback) ->
+gulp.task 'webpack', ['compile'], (callback) ->
   config = Object.create(webpackConfig)
   config.plugins = config.plugins.concat(
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.OccurenceOrderPlugin()
   )
 
   webpack(config).run (error, stats) ->
     throw new gutil.PluginError('webpack', error) if error
     gutil.log '[webpack]', stats.toString(colors: true)
     callback()
+
+gulp.task 'build', ['webpack'], (callback) ->
+  stream = gulp.src('./main.js')
+    .pipe(uglify())
+    .pipe(rename("main.min.js"))
+    .pipe(gulp.dest('./'))
+  stream
 
 gulp.task 'lint', ->
   stream = gulp.src('./src/**/*.coffee')
@@ -105,10 +113,10 @@ gulp.task 'clean', ->
 gulp.task 'compile', ['lint'], ->
   es.concat(
     gulp.src('./src/**/*.coffee')
-      .pipe(coffee())
+      .pipe(coffee(bare: true))
       .pipe(gulp.dest('./compile/src'))
     gulp.src('./spec/**/*.coffee')
-      .pipe(coffee())
+      .pipe(coffee(bare: true))
       .pipe(gulp.dest('./compile/spec'))
   )
 

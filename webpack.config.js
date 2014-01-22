@@ -3,8 +3,7 @@ module.exports = {
   context: __dirname,
   entry: ['./compile/src/garmin.js'],
   output: {
-    path: __dirname + "/build/",
-    filename: 'bundle.js'
+    filename: 'main.js'
   },
   plugins: []
 }

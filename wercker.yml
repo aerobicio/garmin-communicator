@@ -4,16 +4,16 @@ build:
     - wercker/npm-install@0.9.3
     - script:
         name: Specs
-        code: node_modules/.bin/gulp spec
+        code: npm run spec
     - script:
         name: Coverage
-        code: node_modules/.bin/gulp check-coverage
+        code: npm run check-coverage
     - script:
         name: Build
-        code: node_modules/.bin/gulp build
+        code: npm run build
   after-steps:
     - script:
         name: Save Artifacts
         code: |
-          cp -R build $WERCKER_REPORT_ARTIFACTS_DIR
+          cp main*.js $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR

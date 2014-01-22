@@ -4,7 +4,7 @@
   "homepage": "https://github.com/plasticine/garmin-communicator",
   "authors": ["Justin Morris <justin@pixelbloom.com>"],
   "description": "A sane re-write of the Garmin Device Connect JS library.",
-  "main": "garmin.js",
+  "main": "main.js",
   "license": "None",
   "private": true,
   "ignore": [
