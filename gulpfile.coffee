@@ -14,6 +14,7 @@ sloc = require('gulp-sloc')
 uglify = require('gulp-uglify')
 rename = require("gulp-rename")
 es = require('event-stream')
+fs = require('fs')
 webpack = require('webpack')
 webpackConfig = require('./webpack.config')
 specHelper = require('./spec/spec_helper.js')
@@ -72,7 +73,7 @@ gulp.task 'develop', ->
   gulp.watch ['./src/**/*', './spec/**/*'], ->
     gulp.run('spec')
 
-gulp.task 'spec', ['compile'], ->
+gulp.task 'spec', ['clean:coverage', 'compile'], ->
   stream = gulp.src(['./compile/src/**/*.js'])
     .pipe(istanbul())
     .on('end', ->
@@ -82,18 +83,21 @@ gulp.task 'spec', ['compile'], ->
           ui: 'bdd'
           reporter: 'spec'
         ))
-        .pipe(istanbul.writeReports())
+        .pipe(istanbul.writeReports('./coverage'))
     )
   stream
 
 gulp.task 'check-coverage', ->
-  options =
-    silent: false
-    coverage: require('./.coverage.json')
+  unless fs.existsSync('coverage/coverage.json')
+    gutil.log(gutil.colors.red("coverage.json not found."))
+    process.exit(1)
 
-  stream = gulp.src('./')
-    .pipe(exec('ls -al'))
-    .pipe(exec('node_modules/.bin/istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
+  stream = gulp.src('coverage/coverage.json')
+    .pipe(exec(
+      'istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>',
+      silent: false
+      coverage: require('./.coverage.json')
+    ))
     .on('error', (errors) ->
       errors
         .toString()
@@ -107,6 +111,11 @@ gulp.task 'check-coverage', ->
 
 gulp.task 'clean', ->
   stream = gulp.src('./compile', read: false)
+    .pipe(clean())
+  stream
+
+gulp.task 'clean:coverage', ->
+  stream = gulp.src('./coverage', read: false)
     .pipe(clean())
   stream
 

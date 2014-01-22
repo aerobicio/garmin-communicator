@@ -46,7 +46,7 @@
   },
   "scripts": {
     "spec": "gulp spec",
-    "check-coverage": "node_modules/.bin/istanbul check-coverage --statements 90 --branches 72 --functions 87 --lines 91",
+    "check-coverage": "gulp check-coverage",
     "build": "gulp build"
   },
   "repository": {
