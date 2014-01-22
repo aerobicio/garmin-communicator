@@ -11,7 +11,6 @@ clean = require('gulp-clean')
 git = require('gulp-git')
 size = require('gulp-size')
 sloc = require('gulp-sloc')
-child_process = require('child_process')
 es = require('event-stream')
 webpack = require('webpack')
 webpackConfig = require('./webpack.config')
@@ -81,7 +80,7 @@ gulp.task 'spec', ['compile'], ->
 
 gulp.task 'check-coverage', ->
   options =
-    silent: false
+    silent: true
     coverage: require('./.coverage.json')
 
   onCoverageError = (errors) ->
@@ -91,6 +90,7 @@ gulp.task 'check-coverage', ->
       .filter((line) -> !line.indexOf("ERROR:"))
       .forEach (error) ->
         gutil.log(gutil.colors.red(error))
+    process.exit(1)
 
   stream = gulp.src('./')
     .pipe(exec('node_modules/.bin/istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
