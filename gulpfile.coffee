@@ -84,6 +84,7 @@ gulp.task 'check-coverage', ->
     coverage: require('./.coverage.json')
 
   stream = gulp.src('./')
+    .pipe(exec('ls -al'))
     .pipe(exec('node_modules/.bin/istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
     .on('error', (errors) ->
       errors
