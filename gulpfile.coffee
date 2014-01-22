@@ -81,7 +81,7 @@ gulp.task 'spec', ['compile'], ->
 
 gulp.task 'check-coverage', ->
   options =
-    silent: false
+    silent: true
     coverage: require('./.coverage.json')
 
   onCoverageError = (errors) ->
@@ -93,7 +93,7 @@ gulp.task 'check-coverage', ->
         gutil.log(gutil.colors.red(error))
 
   stream = gulp.src('./')
-    .pipe(exec('istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
+    .pipe(exec('node_modules/.bin/istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>', options))
     .on('error', onCoverageError)
   stream
 
