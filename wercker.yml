@@ -8,8 +8,7 @@ build:
     - script:
         name: Coverage
         code: |
-          which istanbul
-          istanbul help
+          node_modules/.bin/istanbul help
           npm run check-coverage
     - script:
         name: Build
