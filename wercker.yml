@@ -7,7 +7,10 @@ build:
         code: npm run spec
     - script:
         name: Coverage
-        code: npm run check-coverage
+        code: |
+          which istanbul
+          istanbul help
+          npm run check-coverage
     - script:
         name: Build
         code: npm run build
