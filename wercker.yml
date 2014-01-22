@@ -4,10 +4,10 @@ build:
     - wercker/npm-install@0.9.3
     - script:
         name: Specs
-        code: gulp spec
+        code: node_modules/.bin/gulp spec
     - script:
         name: Build
-        code: gulp build
+        code: node_modules/.bin/gulp build
   after-steps:
     - script:
         name: Save Artifacts
