@@ -81,7 +81,7 @@ gulp.task 'spec', ['compile'], ->
 
 gulp.task 'check-coverage', ->
   options =
-    silent: true
+    silent: false
     coverage: require('./.coverage.json')
 
   onCoverageError = (errors) ->
