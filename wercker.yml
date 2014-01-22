@@ -6,6 +6,9 @@ build:
         name: Specs
         code: node_modules/.bin/gulp spec
     - script:
+        name: Coverage
+        code: node_modules/.bin/gulp check-coverage
+    - script:
         name: Build
         code: node_modules/.bin/gulp build
   after-steps:
