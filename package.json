@@ -6,7 +6,7 @@
   "directories": {},
   "dependencies": {
     "lodash": "~2.4.1",
-    "q": "~1.0.0",
+    "q": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~1.8.1",
@@ -45,7 +45,6 @@
   },
   "scripts": {
     "spec": "gulp spec",
-    "check-coverage": "gulp check-coverage",
     "build": "gulp build"
   },
   "repository": {

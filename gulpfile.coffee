@@ -86,27 +86,27 @@ gulp.task 'spec', ['clean:coverage', 'compile'], ->
     )
   stream
 
-gulp.task 'check-coverage', ->
-  unless fs.existsSync('coverage/coverage.json')
-    gutil.log(gutil.colors.red("coverage.json not found."))
-    process.exit(1)
+# gulp.task 'check-coverage', ->
+#   unless fs.existsSync('coverage/coverage.json')
+#     gutil.log(gutil.colors.red("coverage.json not found."))
+#     process.exit(1)
 
-  stream = gulp.src('coverage/coverage.json', read: false)
-    .pipe(exec(
-      'istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>',
-      silent: false
-      coverage: require('./.coverage.json')
-    ))
-    .on('error', (errors) ->
-      errors
-        .toString()
-        .split("\n")
-        .filter((line) -> !line.indexOf("ERROR:"))
-        .forEach (error) ->
-          gutil.log(gutil.colors.red(error))
-      process.exit(1)
-    )
-  stream
+#   stream = gulp.src('coverage/coverage.json', read: false)
+#     .pipe(exec(
+#       'istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>',
+#       silent: false
+#       coverage: require('./.coverage.json')
+#     ))
+#     .on('error', (errors) ->
+#       errors
+#         .toString()
+#         .split("\n")
+#         .filter((line) -> !line.indexOf("ERROR:"))
+#         .forEach (error) ->
+#           gutil.log(gutil.colors.red(error))
+#       process.exit(1)
+#     )
+#   stream
 
 gulp.task 'clean', ->
   stream = gulp.src('./compile', read: false)
