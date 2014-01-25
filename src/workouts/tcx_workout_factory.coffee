@@ -22,7 +22,7 @@ exports.TcxWorkoutFactory = class TcxWorkoutFactory extends WorkoutFactory
       .getAttribute("StartTime")
     @_parseISODateString(dateTimeString)
 
-  _getIdForActivityNode: (activity) =>
+  _getIdForActivityNode: (activity) ->
     activity
       .getElementsByTagName("Id")[0]
       .textContent

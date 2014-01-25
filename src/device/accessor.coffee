@@ -1,4 +1,4 @@
-{Communicator} = require('../../src/communicator')
+{Communicator} = require('../communicator')
 {XMLParser}    = require('../utils/xmlparser')
 
 exports.Accessor = class Accessor
@@ -62,6 +62,7 @@ exports.Accessor = class Accessor
         progress.percent = parseInt(node.textContent, 10)
       else
         progress.content.push(node.textContent)
+      node
     progress
 
   _getProgressXml: ->

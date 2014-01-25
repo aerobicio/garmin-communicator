@@ -1,5 +1,5 @@
-{Plugin}    = require('../src/plugin')
-{XMLParser} = require('../src/utils/xmlparser')
+{Plugin}    = require('./plugin')
+{XMLParser} = require('./utils/xmlparser')
 
 exports.Communicator = class Communicator
   "use strict"
@@ -7,8 +7,8 @@ exports.Communicator = class Communicator
   _configuration = null
   _instance = null
 
-  @get: (configuration = {}) ->
-    _configuration ||= configuration
+  @get: (configuration) ->
+    _configuration = configuration if configuration
     _instance ||= new PrivateCommunicator(_configuration)
 
   @destroy: ->
@@ -35,10 +35,15 @@ exports.Communicator = class Communicator
     write: (name, data) ->
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name] = data
+        true
+      else
+        false
 
     read: (name) ->
       if @pluginProxy.hasOwnProperty(name)
         @pluginProxy[name]
+      else
+        false
 
     busy: (value) ->
       @_busy = value if value?
@@ -75,10 +80,10 @@ exports.Communicator = class Communicator
 
     _parseDeviceXml: ->
       # this sucks, but avoids a weird circular dependancy issue that exists
-      {Device} = require('../src/device')
+      {Device} = require('./device')
 
       xml = XMLParser.parse(@invoke('DevicesXmlString'))
-      _(xml.getElementsByTagName("Device")).map (device) =>
+      _(xml.getElementsByTagName("Device")).map (device) ->
         name   = device.getAttribute("DisplayName")
         number = parseInt(device.getAttribute("Number"), 10)
         new Device(number, name)

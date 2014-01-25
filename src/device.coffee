@@ -1,6 +1,6 @@
-{Communicator} = require('../src/communicator')
-{Reader}       = require('../src/device/reader')
-{XMLParser}    = require('../src/utils/xmlparser')
+{Communicator} = require('./communicator')
+{Reader}       = require('./device/reader')
+{XMLParser}    = require('./utils/xmlparser')
 
 exports.Device = class Device
   "use strict"
