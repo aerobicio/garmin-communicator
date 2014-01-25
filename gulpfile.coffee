@@ -77,7 +77,6 @@ gulp.task 'spec', ['clean:coverage', 'compile'], ->
   stream = gulp.src(['./compile/src/**/*.js'])
     .pipe(istanbul())
     .on('end', ->
-
       gulp.src(['./compile/spec/**/*_spec.js'])
         .pipe(mocha(
           ui: 'bdd'
@@ -122,10 +121,10 @@ gulp.task 'clean:coverage', ->
 gulp.task 'compile', ['lint'], ->
   es.concat(
     gulp.src('./src/**/*.coffee')
-      .pipe(coffee(bare: true))
+      .pipe(coffee(bare: true, sourceMap: true))
       .pipe(gulp.dest('./compile/src'))
     gulp.src('./spec/**/*.coffee')
-      .pipe(coffee(bare: true))
+      .pipe(coffee(bare: true, sourceMap: true))
       .pipe(gulp.dest('./compile/spec'))
   )
 
