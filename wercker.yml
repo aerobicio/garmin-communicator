@@ -7,10 +7,10 @@ build:
         code: npm run spec
     - script:
         name: Check Coverage
-        code: gulp check-coverage
+        code: npm run coverage
     - script:
         name: Build
-        code: gulp build
+        code: npm run build
   after-steps:
     - script:
         name: Save Artifacts
