@@ -79,7 +79,6 @@ exports.Communicator = class Communicator
         setTimeout (=> @_loopUntilFinishedFindingDevices(deferred)), 100
 
     _parseDeviceXml: ->
-      # this sucks, but avoids a weird circular dependancy issue that exists
       {Device} = require('./device')
 
       xml = XMLParser.parse(@invoke('DevicesXmlString'))

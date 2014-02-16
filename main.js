@@ -1,4 +1,6 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -7,7 +9,7 @@
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -17,19 +19,15 @@
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
-/******/ 	// The bundle contains no chunks. A empty chunk loading function.
-/******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, this);
-/******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	require.modules = modules;
@@ -198,6 +196,10 @@
 
 	}).call(this);
 
+	/*
+	//@ sourceMappingURL=communicator.js.map
+	*/
+
 
 /***/ },
 /* 2 */
@@ -253,6 +255,10 @@
 	  return XMLParser;
 
 	})();
+
+	/*
+	//@ sourceMappingURL=xmlparser.js.map
+	*/
 
 
 /***/ },
@@ -332,6 +338,10 @@
 
 	})(Accessor);
 
+	/*
+	//@ sourceMappingURL=reader.js.map
+	*/
+
 
 /***/ },
 /* 4 */
@@ -367,6 +377,10 @@
 	  return WorkoutFactory;
 
 	})();
+
+	/*
+	//@ sourceMappingURL=workout_factory.js.map
+	*/
 
 
 /***/ },
@@ -501,6 +515,10 @@
 
 	})();
 
+	/*
+	//@ sourceMappingURL=device.js.map
+	*/
+
 
 /***/ },
 /* 6 */
@@ -622,6 +640,10 @@
 
 	})();
 
+	/*
+	//@ sourceMappingURL=accessor.js.map
+	*/
+
 
 /***/ },
 /* 7 */
@@ -675,6 +697,10 @@
 	  return Garmin;
 
 	})();
+
+	/*
+	//@ sourceMappingURL=garmin.js.map
+	*/
 
 
 /***/ },
@@ -746,6 +772,10 @@
 
 	})();
 
+	/*
+	//@ sourceMappingURL=plugin.js.map
+	*/
+
 
 /***/ },
 /* 9 */
@@ -780,6 +810,10 @@
 	  return FitWorkout;
 
 	})();
+
+	/*
+	//@ sourceMappingURL=fit_workout.js.map
+	*/
 
 
 /***/ },
@@ -850,6 +884,10 @@
 
 	})(WorkoutFactory);
 
+	/*
+	//@ sourceMappingURL=fit_workout_factory.js.map
+	*/
+
 
 /***/ },
 /* 11 */
@@ -875,6 +913,10 @@
 	  return TcxWorkout;
 
 	})();
+
+	/*
+	//@ sourceMappingURL=tcx_workout.js.map
+	*/
 
 
 /***/ },
@@ -930,6 +972,10 @@
 	  return TcxWorkoutFactory;
 
 	})(WorkoutFactory);
+
+	/*
+	//@ sourceMappingURL=tcx_workout_factory.js.map
+	*/
 
 
 /***/ }

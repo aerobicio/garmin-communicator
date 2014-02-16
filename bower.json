@@ -14,9 +14,12 @@
     "spec",
     "compile",
     "wercker.yml",
+    "coffeelint.json",
     "Makefile",
     "example",
-    "src"
+    "src",
+    "webpack.config.js",
+    "gulpfile.*"
   ],
   "dependencies": {
     "q": "~0.9.7",
