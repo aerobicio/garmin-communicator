@@ -45,7 +45,7 @@
   "scripts": {
     "spec": "gulp spec",
     "build": "gulp build",
-    "coverage": "gulp coverage"
+    "coverage": "gulp check-coverage"
   },
   "repository": {
     "type": "git",
