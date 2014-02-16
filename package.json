@@ -40,7 +40,8 @@
     "uglify-js": "~2.4.12",
     "uglifyify": "~1.1.0",
     "webpack": "~1.0.0-rc12",
-    "xmldom": "~0.1.19"
+    "xmldom": "~0.1.19",
+    "istanbul": "~0.2.4"
   },
   "scripts": {
     "spec": "gulp spec",
