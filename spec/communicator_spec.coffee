@@ -90,7 +90,9 @@ describe 'Communicator', ->
       }
       @startFindDevicesStub     = sinon.stub(pluginProxy, 'StartFindDevices')
       @finishFindDevicesStub    = sinon.stub(pluginProxy, 'FinishFindDevices')
-      @devicesXmlStringStub     = sinon.stub(pluginProxy, 'DevicesXmlString').returns ""
+      @devicesXmlStringStub     = sinon.stub(pluginProxy, 'DevicesXmlString').returns """
+        <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+      """
       @communicator.pluginProxy = pluginProxy
 
     afterEach ->

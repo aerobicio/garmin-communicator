@@ -6,6 +6,9 @@ build:
         name: Specs
         code: npm run spec
     - script:
+        name: Check Coverage
+        code: npm run coverage
+    - script:
         name: Build
         code: npm run build
   after-steps:
@@ -14,3 +17,7 @@ build:
         code: |
           cp main*.js $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
+    - sherzberg/slack-notify:
+        subdomain: aerobic
+        token: $SLACK_TOKEN
+        channel: general
