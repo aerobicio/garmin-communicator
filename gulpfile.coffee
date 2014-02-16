@@ -46,18 +46,18 @@ gulp.task 'lint', ->
 
 gulp.task 'bump:patch', ->
   gulp.src(['./package.json', './bower.json'])
-  .pipe(bump(type: 'patch'))
-  .pipe(gulp.dest('./'))
+    .pipe(bump(type: 'patch'))
+    .pipe(gulp.dest('./'))
 
 gulp.task 'bump:minor', ->
   gulp.src(['./package.json', './bower.json'])
-  .pipe(bump(type: 'minor'))
-  .pipe(gulp.dest('./'))
+    .pipe(bump(type: 'minor'))
+    .pipe(gulp.dest('./'))
 
 gulp.task 'bump:major', ->
   gulp.src(['./package.json', './bower.json'])
-  .pipe(bump(type: 'major'))
-  .pipe(gulp.dest('./'))
+    .pipe(bump(type: 'major'))
+    .pipe(gulp.dest('./'))
 
 gulp.task 'git:tag-release', ->
   pkg = Object.create(require('./package.json'))
@@ -70,8 +70,12 @@ gulp.task 'git:add-commit', ->
   .pipe(git.commit('Release commit.'))
 
 gulp.task 'develop', ->
-  gulp.watch ['./src/**/*', './spec/**/*'], ->
+  gulp.watch(['./src/**/*', './spec/**/*'], ->
     gulp.run('spec')
+  ).on('error', ->
+    gutil.log(arguments)
+    gulp.run('develop')
+  )
 
 gulp.task 'spec', ['clean:coverage', 'compile'], ->
   stream = gulp.src(['./compile/src/**/*.js'])
@@ -86,27 +90,27 @@ gulp.task 'spec', ['clean:coverage', 'compile'], ->
     )
   stream
 
-# gulp.task 'check-coverage', ->
-#   unless fs.existsSync('coverage/coverage.json')
-#     gutil.log(gutil.colors.red("coverage.json not found."))
-#     process.exit(1)
+gulp.task 'check-coverage', ->
+  unless fs.existsSync('coverage/coverage-final.json')
+    gutil.log(gutil.colors.red("coverage-final.json not found."))
+    process.exit(1)
 
-#   stream = gulp.src('coverage/coverage.json', read: false)
-#     .pipe(exec(
-#       'istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>',
-#       silent: false
-#       coverage: require('./.coverage.json')
-#     ))
-#     .on('error', (errors) ->
-#       errors
-#         .toString()
-#         .split("\n")
-#         .filter((line) -> !line.indexOf("ERROR:"))
-#         .forEach (error) ->
-#           gutil.log(gutil.colors.red(error))
-#       process.exit(1)
-#     )
-#   stream
+  stream = gulp.src('coverage/coverage-final.json', read: false)
+    .pipe(exec(
+      'istanbul check-coverage --statements <%= options.coverage.statements %> --branches <%= options.coverage.branches %> --functions <%= options.coverage.functions %> --lines <%= options.coverage.lines %>',
+      silent: false
+      coverage: require('./.coverage.json')
+    ))
+    .on('error', (errors) ->
+      errors
+        .toString()
+        .split("\n")
+        .filter((line) -> !line.indexOf("ERROR:"))
+        .forEach (error) ->
+          gutil.log(gutil.colors.red(error))
+      process.exit(1)
+    )
+  stream
 
 gulp.task 'clean', ->
   stream = gulp.src('./compile', read: false)

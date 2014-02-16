@@ -6,8 +6,11 @@ build:
         name: Specs
         code: npm run spec
     - script:
+        name: Check Coverage
+        code: gulp check-coverage
+    - script:
         name: Build
-        code: npm run build
+        code: gulp build
   after-steps:
     - script:
         name: Save Artifacts
