@@ -17,3 +17,7 @@ build:
         code: |
           cp main*.js $WERCKER_REPORT_ARTIFACTS_DIR
           cp -R coverage $WERCKER_REPORT_ARTIFACTS_DIR
+    - sherzberg/slack-notify:
+        subdomain: aerobic
+        token: $SLACK_TOKEN
+        channel: general
