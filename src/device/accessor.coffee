@@ -21,7 +21,7 @@ exports.Accessor = class Accessor
     argsArray = Array.prototype.slice.call(arguments, 0)
     args = [@_startPluginAction(), @device.number, @dataType].concat(argsArray)
     @communicator.invoke.apply(@communicator, args)
-    @_checkFinished(@deferred)
+    @_startCheckFinished(@deferred)
     @deferred.promise
 
   _startPluginAction: ->
@@ -30,7 +30,7 @@ exports.Accessor = class Accessor
   _finishPluginAction: ->
     "Finish#{@pluginAction}"
 
-  _checkFinished: (deferred) =>
+  _startCheckFinished: (deferred) =>
     switch @communicator.invoke(@_finishPluginAction())
       when @STATUS_CODES.working  then @_onWorking(deferred)
       when @STATUS_CODES.finished then @_onFinished(deferred)
@@ -41,10 +41,10 @@ exports.Accessor = class Accessor
 
   _onWorking: (deferred) ->
     deferred.notify(@_progress())
-    setTimeout (=> @_checkFinished(deferred)), 100
+    setTimeout (=> @_startCheckFinished(deferred)), 100
 
   _onWaiting: (deferred) ->
-    setTimeout (=> @_checkFinished(deferred)), 150
+    setTimeout (=> @_startCheckFinished(deferred)), 150
 
   _onIdle: (deferred) ->
     deferred.reject()

@@ -4,7 +4,7 @@
 
 describe 'TcxWorkout', ->
   beforeEach ->
-    @accessorCheckFinishedStub = sinon.stub(Accessor.prototype, '_checkFinished').returns(true)
+    @accessorCheckFinishedStub = sinon.stub(Accessor.prototype, '_startCheckFinished').returns(true)
     @device = sinon.stub(number: 1)
     @id = 1
     @date = new Date
