@@ -44,7 +44,7 @@ exports.Device = class Device
     ->
       unless @["canRead#{type}"]
         throw new Error("read#{type} is not supported on this device")
-      reader = new Reader(@, dataType, pluginMethod)
+      reader = new Reader(@.number, dataType, pluginMethod)
       reader.perform()
 
   _writer: ->

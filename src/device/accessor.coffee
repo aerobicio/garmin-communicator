@@ -11,7 +11,7 @@ exports.Accessor = class Accessor
     waiting:  2
     finished: 3
 
-  constructor: (@device, @dataType, @pluginMethod) ->
+  constructor: (@deviceNumber, @dataType, @pluginMethod) ->
     @communicator = Communicator.get()
     @pluginAction = "#{@ACTION}#{@pluginMethod}"
 
@@ -19,7 +19,7 @@ exports.Accessor = class Accessor
     @deferred = Q.defer()
     throw new Error("Plugin is busy") if @communicator.busy()
     argsArray = Array.prototype.slice.call(arguments, 0)
-    args = [@_startPluginAction(), @device.number, @dataType].concat(argsArray)
+    args = [@_startPluginAction(), @deviceNumber, @dataType].concat(argsArray)
     @communicator.invoke.apply(@communicator, args)
     @_startCheckFinished(@deferred)
     @deferred.promise
@@ -47,10 +47,10 @@ exports.Accessor = class Accessor
     setTimeout (=> @_startCheckFinished(deferred)), 150
 
   _onIdle: (deferred) ->
+    # What is happening?
     deferred.reject()
 
-  _onFinished: ->
-    throw new Error("Abstract method: Not Implemented")
+  _onFinished: -> # abstract method
 
   _progress: ->
     progress    = {content: [], percent: 0}

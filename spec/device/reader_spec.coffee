@@ -7,10 +7,10 @@
 describe 'Reader', ->
   beforeEach ->
     @pluginIsInstalledStub = sinon.stub(Plugin.prototype, 'pluginIsInstalled')
-    @device = {number: 0}
+    @deviceNumber = 0
     @dataType = 'test'
     @pluginMethod = 'Foo'
-    @reader = new Reader(@device, @dataType, @pluginMethod)
+    @reader = new Reader(@deviceNumber, @dataType, @pluginMethod)
     @invokeStub = sinon.stub(@reader.communicator, 'invoke')
     @reader.communicator.pluginProxy = {
       StartReadFoo: -> true
