@@ -15,6 +15,29 @@ The main goal is to provide a better interface for interacting with Garmin devic
 - A promise based approach to async operations, no more insane polling!
 - Tests!
 
+### Examples...
+```coffeescript
+garmin = new Garmin(unlockCodes: your: 'codes here')
+
+# Unlock the plugin
+garmin.unlock() if garmin.isInstalled()
+
+# Fetch a list of devices
+devicesPromise = garmin.devices() # returns a promise
+
+devicesPromise.then (devices) ->
+    device = devices[0]
+    device.canReadFITActivities # boolean
+    device.canReadActivities # boolean
+
+    # Fetch activities from a device
+    activitiesPromise = devices.getActivities() # returns a promise
+
+    activitiesPromise.then (activities) ->
+        # Read activity data, could be XML or FIT binary, or whatever
+        activities[0].getData() # returns a promise
+```
+
 ***
 
 ### Runtime Dependencies
