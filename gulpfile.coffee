@@ -2,6 +2,7 @@ gulp = require('gulp')
 gutil = require('gulp-util')
 watch = require('gulp-watch')
 coffee = require('gulp-coffee')
+coveralls = require('gulp-coveralls')
 bump = require('gulp-bump')
 lint = require('gulp-coffeelint')
 mocha = require('gulp-mocha')
@@ -32,32 +33,30 @@ gulp.task 'webpack', ['compile'], (callback) ->
     callback()
 
 gulp.task 'build', ['webpack'], (callback) ->
-  stream = gulp.src('./main.js')
-    .pipe(uglify())
-    .pipe(rename("main.min.js"))
-    .pipe(gulp.dest('./'))
-  stream
+  gulp.src('./main.js')
+     .pipe(uglify())
+     .pipe(rename("main.min.js"))
+     .pipe(gulp.dest('./'))
 
 gulp.task 'lint', ->
-  stream = gulp.src('./src/**/*.coffee')
-    .pipe(lint())
-    .pipe(lint.reporter())
-  stream
+  gulp.src('./src/**/*.coffee')
+      .pipe(lint())
+      .pipe(lint.reporter())
 
 gulp.task 'bump:patch', ->
   gulp.src(['./package.json', './bower.json'])
-    .pipe(bump(type: 'patch'))
-    .pipe(gulp.dest('./'))
+      .pipe(bump(type: 'patch'))
+      .pipe(gulp.dest('./'))
 
 gulp.task 'bump:minor', ->
   gulp.src(['./package.json', './bower.json'])
-    .pipe(bump(type: 'minor'))
-    .pipe(gulp.dest('./'))
+      .pipe(bump(type: 'minor'))
+      .pipe(gulp.dest('./'))
 
 gulp.task 'bump:major', ->
   gulp.src(['./package.json', './bower.json'])
-    .pipe(bump(type: 'major'))
-    .pipe(gulp.dest('./'))
+      .pipe(bump(type: 'major'))
+      .pipe(gulp.dest('./'))
 
 gulp.task 'git:tag-release', ->
   pkg = Object.create(require('./package.json'))
@@ -66,8 +65,8 @@ gulp.task 'git:tag-release', ->
 
 gulp.task 'git:add-commit', ->
   gulp.src('./**/*')
-  .pipe(git.add())
-  .pipe(git.commit('Release commit.'))
+      .pipe(git.add())
+      .pipe(git.commit('Release commit.'))
 
 gulp.task 'develop', ->
   gulp.watch(['./src/**/*', './spec/**/*'], ->
@@ -112,32 +111,34 @@ gulp.task 'check-coverage', ->
     )
   stream
 
+gulp.task 'coveralls', ->
+  gulp.src('./coverage/**/lcov.info')
+      .pipe(coveralls())
+
 gulp.task 'clean', ->
-  stream = gulp.src('./compile', read: false)
-    .pipe(clean())
-  stream
+  gulp.src('./compile', read: false)
+      .pipe(clean())
 
 gulp.task 'clean:coverage', ->
-  stream = gulp.src('./coverage', read: false)
-    .pipe(clean())
-  stream
+  gulp.src('./coverage', read: false)
+      .pipe(clean())
 
 gulp.task 'compile', ['lint'], ->
   es.concat(
     gulp.src('./src/**/*.coffee')
-      .pipe(coffee(bare: true, sourceMap: true))
-      .pipe(gulp.dest('./compile/src'))
+        .pipe(coffee(bare: true, sourceMap: true))
+        .pipe(gulp.dest('./compile/src'))
     gulp.src('./spec/**/*.coffee')
-      .pipe(coffee(bare: true, sourceMap: true))
-      .pipe(gulp.dest('./compile/spec'))
+        .pipe(coffee(bare: true, sourceMap: true))
+        .pipe(gulp.dest('./compile/spec'))
   )
 
 gulp.task 'size', ->
   gulp.src('build/*.js')
-    .pipe(size(showFiles: true))
+      .pipe(size(showFiles: true))
 
 gulp.task 'sloc', ->
   gulp.src('./src/**/*.coffee')
-    .pipe(sloc())
+      .pipe(sloc())
 
 gulp.task 'default', ['spec']
