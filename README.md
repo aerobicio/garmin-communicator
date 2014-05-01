@@ -1,29 +1,32 @@
 # Garmin Communicator
 
-[![Dependency Status](https://gemnasium.com/aerobicio/garmin-communicator.png)](https://gemnasium.com/aerobicio/garmin-communicator) [![Coverage Status](https://coveralls.io/repos/aerobicio/garmin-communicator/badge.png)](https://coveralls.io/r/aerobicio/garmin-communicator)
+[![wercker status](https://app.wercker.com/status/b1a5d9088c0a82f7e9dfe9cdbe4f660b/s/master "wercker status")](https://app.wercker.com/project/bykey/b1a5d9088c0a82f7e9dfe9cdbe4f660b) [![Coverage Status](https://coveralls.io/repos/aerobicio/garmin-communicator/badge.png)](https://coveralls.io/r/aerobicio/garmin-communicator) [![Dependency Status](https://gemnasium.com/aerobicio/garmin-communicator.png)](https://gemnasium.com/aerobicio/garmin-communicator)
 
-[![wercker status](https://app.wercker.com/status/b1a5d9088c0a82f7e9dfe9cdbe4f660b/m "wercker status")](https://app.wercker.com/project/bykey/b1a5d9088c0a82f7e9dfe9cdbe4f660b)
+## A sane re-write of the Garmin Device Connect JS library.
+This project is a re-implementation of the official [Garmin Communicator Device Connect Javascript API](http://developer.garmin.com/web/communicator-api/documentation/index.html), specifically it is an alternative to `Garmin.DevicePlugin`. It is intended as a replacement for the (seemingly) unmaintained official project.
 
-## A (more) sane re-write of the Garmin Device Connect JS library.
+It should be considered a __work in progress__, and is by no means a full re-implementation, and probably never will be. Currently only reading operations are supported, but support for writing is planned.
 
-### Requirements
+The main goal is to provide a better interface for interacting with Garmin devices via the Communicator Browser plugin.
 
+### Why?
+
+- No Prototype.js
+- A promise based approach to async operations, no more insane polling!
+- Tests!
+
+***
+
+### Runtime Dependencies
 - `lodash` (http://lodash.com)
-- `q` (https://github.com/kriskowal/q)
+- `Q` (https://github.com/kriskowal/q)
 
 ### Developing
-
 ##### Install developments tools:
-- `npm install`
-- `brew install fswatch terminal-notifier`
+- `./script/bootstrap`
 
 ###### Watch files, recompile on change
-- `make develop`
+- `gulp develop`
 
-You can now either run the suite in-browser by opening `./spec/index.html`, or
-just edit files, and the suite will be run whenever a spec or source file is
-saved.
-
-##### Run specs:
-- `make lint`
-- `make spec` or open `./spec/index.html` in a browser.
+##### Running specs:
+- `gulp spec`
