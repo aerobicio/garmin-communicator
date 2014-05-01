@@ -11,10 +11,10 @@ build:
     - script:
         name: Build
         code: npm run build
-  after-steps:
     - script:
         name: Save Coverage
         code: npm run coveralls
+  after-steps:
     - script:
         name: Save Artifacts
         code: |
