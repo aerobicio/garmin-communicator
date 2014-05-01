@@ -9,6 +9,8 @@ This project is a re-implementation of the official Garmin Communicator Device C
 
 It should be considered a __work in progress__, and is by no means a full re-implementation, and probably never will be. :)
 
+
+
 ### Runtime Dependancies
 - `lodash` (http://lodash.com)
 - `Q` (https://github.com/kriskowal/q)

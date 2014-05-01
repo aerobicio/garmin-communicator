@@ -14,10 +14,7 @@ build:
   after-steps:
     - script:
         name: Save Coverage
-        code: |
-          if [[ $WERCKER_GIT_BRANCH == "master" ]]; then
-            npm run coveralls
-          fi
+        code: npm run coveralls
     - script:
         name: Save Artifacts
         code: |
