@@ -1,6 +1,6 @@
 # Garmin Communicator
 
-[![Dependency Status](https://gemnasium.com/aerobicio/garmin-communicator.png)](https://gemnasium.com/aerobicio/garmin-communicator) [![Coverage Status](https://coveralls.io/repos/aerobicio/garmin-communicator/badge.png)](https://coveralls.io/r/aerobicio/garmin-communicator) [![wercker status](https://app.wercker.com/status/b1a5d9088c0a82f7e9dfe9cdbe4f660b/m "wercker status")](https://app.wercker.com/project/bykey/b1a5d9088c0a82f7e9dfe9cdbe4f660b)
+[![wercker status](https://app.wercker.com/status/b1a5d9088c0a82f7e9dfe9cdbe4f660b/s/master "wercker status")](https://app.wercker.com/project/bykey/b1a5d9088c0a82f7e9dfe9cdbe4f660b) [![Dependency Status](https://gemnasium.com/aerobicio/garmin-communicator.png)](https://gemnasium.com/aerobicio/garmin-communicator) [![Coverage Status](https://coveralls.io/repos/aerobicio/garmin-communicator/badge.png)](https://coveralls.io/r/aerobicio/garmin-communicator)
 
 ***
 
