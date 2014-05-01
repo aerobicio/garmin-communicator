@@ -9,8 +9,9 @@ It should be considered a __work in progress__, and is by no means a full re-imp
 
 The main goal is to provide a better interface for interacting with Garmin devices via the Communicator Browser plugin.
 
-### Why?
+### But why!?
 
+I wanted:
 - No Prototype.js
 - A promise based approach to async operations, no more insane polling!
 - Tests!
