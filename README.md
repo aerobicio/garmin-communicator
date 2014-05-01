@@ -15,7 +15,7 @@ The main goal is to provide a better interface for interacting with Garmin devic
 - A promise based approach to async operations, no more insane polling!
 - Tests!
 
-### Examples...
+### For example
 ```coffeescript
 garmin = new Garmin(unlockCodes: your: 'codes here')
 
