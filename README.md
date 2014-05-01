@@ -23,7 +23,7 @@ garmin = new Garmin(unlockCodes: your: 'codes here')
 garmin.unlock() if garmin.isInstalled()
 
 # Fetch a list of devices
-devicesPromise = garmin.devices() # returns a promise
+devicesPromise = garmin.devices() # promise
 
 devicesPromise.then (devices) ->
     device = devices[0]
@@ -31,11 +31,11 @@ devicesPromise.then (devices) ->
     device.canReadActivities # boolean
 
     # Fetch activities from a device
-    activitiesPromise = devices.getActivities() # returns a promise
+    activitiesPromise = devices.getActivities() # promise
 
     activitiesPromise.then (activities) ->
         # Read activity data, could be XML or FIT binary, or whatever
-        activities[0].getData() # returns a promise
+        activities[0].getData() # promise
 ```
 
 ***
