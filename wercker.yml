@@ -13,6 +13,12 @@ build:
         code: npm run build
   after-steps:
     - script:
+        name: Save Coverage
+        code: |
+          if [[ $WERCKER_GIT_BRANCH == "master" ]]; then
+            npm run coveralls
+          fi
+    - script:
         name: Save Artifacts
         code: |
           cp main*.js $WERCKER_REPORT_ARTIFACTS_DIR

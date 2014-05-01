@@ -41,12 +41,14 @@
     "uglifyify": "~1.1.0",
     "webpack": "~1.0.0-rc12",
     "xmldom": "~0.1.19",
-    "istanbul": "~0.2.4"
+    "istanbul": "~0.2.4",
+    "gulp-coveralls": "~0.1.2"
   },
   "scripts": {
     "spec": "gulp spec",
     "build": "gulp build",
-    "coverage": "gulp check-coverage"
+    "coverage": "gulp check-coverage",
+    "coveralls": "gulp coveralls"
   },
   "repository": {
     "type": "git",
